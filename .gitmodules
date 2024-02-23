@@ -1,0 +1,9 @@
+[submodule "microshell"]
+	path = microshell
+	url = https://github.com/mcknly/microshell.git
+[submodule "littlefs/littlefs"]
+	path = littlefs/littlefs
+	url = https://github.com/littlefs-project/littlefs.git
+[submodule "cmake-git-version-tracking"]
+	path = git_version
+	url = https://github.com/andrew-hardin/cmake-git-version-tracking.git
