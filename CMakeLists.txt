@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.13)
 ### PROJECT SETTINGS ###
 
 # PROJECT NAME - in quotes, no spaces
-set(PROJ_NAME "my-bbos-proj")
+set(PROJ_NAME "github-test-proj")
 # PROJECT VERSION - in quotes, no spaces, can contain alphanumeric if necessary
-set(PROJ_VER "0.0")
+set(PROJ_VER "99.99")
 # CLI INTERFACE - 0: use UART for CLI (default), 1: use USB for CLI
-set(CLI_IFACE 0)
+set(CLI_IFACE 1)
 # BOARD TYPE - set the RP2040 "board" being used (i.e. 'pico', 'pico_w', etc)
-set(PICO_BOARD pico)
+set(PICO_BOARD pico_w)
 
 ### END PROJECT SETTINGS ###
 
@@ -29,7 +29,7 @@ add_definitions(-DBOARD_TYPE=${PICO_BOARD})    # pass the board type to the prep
 add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 1: use USB for CLI
 #add_definitions(-DSCHED_TEST_DELAY) # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 if(PICO_BOARD STREQUAL "pico_w")
-    add_definitions((-DUSING_PICOW)) # Pass this parameter to the preprocessor if board type is pico_w since some HW config needs to change
+    add_definitions(-DUSING_PICOW) # Pass this parameter to the preprocessor if board type is pico_w since some HW config needs to change
 endif()
 
 # initialize the Pico/RP2040 SDK
