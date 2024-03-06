@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.13)
 ### PROJECT SETTINGS ###
 
 # PROJECT NAME - in quotes, no spaces
-set(PROJ_NAME "github-test-proj")
+set(PROJ_NAME "my-bbos-proj")
 # PROJECT VERSION - in quotes, no spaces, can contain alphanumeric if necessary
-set(PROJ_VER "99.99")
+set(PROJ_VER "0.0")
 # CLI INTERFACE - 0: use UART for CLI (default), 1: use USB for CLI
-set(CLI_IFACE 1)
+set(CLI_IFACE 0)
 # BOARD TYPE - set the RP2040 "board" being used (i.e. 'pico', 'pico_w', etc)
-set(PICO_BOARD pico_w)
+set(PICO_BOARD pico)
 
 ### END PROJECT SETTINGS ###
 
