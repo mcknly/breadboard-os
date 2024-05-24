@@ -73,9 +73,9 @@ size_t version_get_data_callback(struct ush_object *self, struct ush_file_descri
     // since it is a rather large array
     char *version_msg = pvPortMalloc(300);
 
-    sprintf(version_msg, USH_SHELL_FONT_STYLE_BOLD USH_SHELL_FONT_COLOR_BLUE);
+    sprintf(version_msg, "" USH_SHELL_FONT_STYLE_BOLD USH_SHELL_FONT_COLOR_BLUE);
     sprintf(version_msg + strlen(version_msg), xstr(PROJECT_NAME) " version:\t" xstr(PROJECT_VERSION) "\r\n"); // Top level project version
-    sprintf(version_msg + strlen(version_msg), USH_SHELL_FONT_STYLE_RESET);
+    sprintf(version_msg + strlen(version_msg), "" USH_SHELL_FONT_STYLE_RESET);
     sprintf(version_msg + strlen(version_msg), "Git commit date:\t%s\r\n",  git_CommitDate());           // Git commit date of build
     sprintf(version_msg + strlen(version_msg), "Git commit hash:\t%s\r\n",  git_CommitSHA1());           // Git commit hash of build
     sprintf(version_msg + strlen(version_msg), "%s version:\t%d.%d\r\n",    BBOS_NAME,                   // BreadboardOS version          
