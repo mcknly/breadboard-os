@@ -1,39 +1,19 @@
 cmake_minimum_required(VERSION 3.13)
 
-### PROJECT SETTINGS ###
-
-# PROJECT NAME - in quotes, no spaces
-set(PROJ_NAME "my-bbos-proj")
-# PROJECT VERSION - in quotes, no spaces, can contain alphanumeric if necessary
-set(PROJ_VER "0.0")
-# CLI INTERFACE - 0: use UART for CLI (default), 1: use USB for CLI
-set(CLI_IFACE 0)
-# BOARD TYPE - set the RP2040 "board" being used (i.e. 'pico', 'pico_w', etc)
-set(PICO_BOARD pico)
-
-### END PROJECT SETTINGS ###
-
-# pull in setups for various modules
-# Raspberry Pi Pico (RP2040) SDK
-include(pico_sdk_import.cmake)
-# FreeRTOS
-include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
-
-# project definition
-project(${PROJ_NAME} C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+
+include(project.cmake)
+
+project(${PROJ_NAME} C CXX ASM)
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
 add_definitions(-DPROJECT_VERSION=${PROJ_VER}) # pass the project version number to the preprocessor for use in the code
 add_definitions(-DBOARD_TYPE=${PICO_BOARD})    # pass the board type to the preprocessor for further decision making
 add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 1: use USB for CLI
 #add_definitions(-DSCHED_TEST_DELAY) # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
-if(PICO_BOARD STREQUAL "pico_w")
-    add_definitions(-DUSING_PICOW) # Pass this parameter to the preprocessor if board type is pico_w since some HW config needs to change
-endif()
 
-# initialize the Pico/RP2040 SDK
-pico_sdk_init()
+# FreeRTOS
+include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
 # add cli/microshell library subdirectory (submodule)
 add_subdirectory(${PROJECT_SOURCE_DIR}/cli cli)
