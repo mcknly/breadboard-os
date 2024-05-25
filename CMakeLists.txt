@@ -67,14 +67,14 @@ target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/rtos
     ${PROJECT_SOURCE_DIR}/services
-    ${PROJECT_SOURCE_DIR}/hardware_pico
+    ${PROJECT_SOURCE_DIR}/hardware/rp2040
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
 )
 add_subdirectory(${PROJECT_SOURCE_DIR}/rtos)
 add_subdirectory(${PROJECT_SOURCE_DIR}/services)
-add_subdirectory(${PROJECT_SOURCE_DIR}/hardware_pico)
+add_subdirectory(${PROJECT_SOURCE_DIR}/hardware/rp2040)
 add_subdirectory(${PROJECT_SOURCE_DIR}/driver_lib)
 
 # add any additional definitions, options
