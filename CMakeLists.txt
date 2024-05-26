@@ -9,6 +9,7 @@ project(${PROJ_NAME} C CXX ASM)
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
 add_definitions(-DPROJECT_VERSION=${PROJ_VER}) # pass the project version number to the preprocessor for use in the code
 add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 1: use USB for CLI
+add_definitions(-DBOARD=${BOARD})              # pass the board type to the preprocessor for further decision making
 #add_definitions(-DSCHED_TEST_DELAY) # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 
 # FreeRTOS

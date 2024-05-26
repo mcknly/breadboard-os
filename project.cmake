@@ -7,12 +7,13 @@ set(PROJ_VER "0.0")
 # CLI INTERFACE - 0: use UART for CLI (default), 1: use USB for CLI
 set(CLI_IFACE 0)
 
-# BOARD TYPE - set the RP2040 "board" being used (i.e. 'pico', 'pico_w', etc)
-set(PICO_BOARD pico)
+# BOARD - set the board being used (i.e. 'pico', 'pico_w', etc)
+set(BOARD pico)
 
 # ------------- Don't change anything below this line ------------
 
-add_definitions(-DBOARD_TYPE=${PICO_BOARD})    # pass the board type to the preprocessor for further decision making
+# BOARD
+set(PICO_BOARD ${BOARD})
 
 # Raspberry Pi Pico (RP2040) SDK
 include(pico_sdk_import.cmake)

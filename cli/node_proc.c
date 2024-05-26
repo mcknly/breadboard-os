@@ -44,7 +44,7 @@ size_t mcuinfo_get_data_callback(struct ush_object *self, struct ush_file_descri
     sprintf(mcuinfo_msg, "MCU: " xstr(MCU_NAME) ", running at %ld Hz\r\n", get_sys_clk_hz());
     sprintf(mcuinfo_msg + strlen(mcuinfo_msg), "RP2040 chip version: %d\r\n", get_chip_version()); // MCU silicon version
     sprintf(mcuinfo_msg + strlen(mcuinfo_msg), "RP2040 ROM version: %d\r\n", get_rom_version());   // MCU chip ROM version
-    sprintf(mcuinfo_msg + strlen(mcuinfo_msg), "Board type: %s\r\n", xstr(BOARD_TYPE));
+    sprintf(mcuinfo_msg + strlen(mcuinfo_msg), "Board: %s\r\n", xstr(BOARD));
     sprintf(mcuinfo_msg + strlen(mcuinfo_msg),
             "RTOS scheduler is [ %s ], %ld tasks registered\r\n",
             scheduler_state[(int32_t)xTaskGetSchedulerState()], uxTaskGetNumberOfTasks());
