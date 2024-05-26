@@ -17,6 +17,15 @@ target_sources(${PROJ_NAME} PRIVATE
 )
 
 function(hardware_build_extra)
+    # initialize the Pico/RP2040 SDK
+    pico_sdk_init()
+
+    if(PICO_BOARD STREQUAL "pico_w")
+        # Pass this parameter to the preprocessor if board type is pico_w
+        # since some HW config needs to change
+        add_definitions(-DUSING_PICOW)
+    endif()
+
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
     pico_enable_stdio_usb(${PROJ_NAME} 0)
     pico_enable_stdio_uart(${PROJ_NAME} 0)

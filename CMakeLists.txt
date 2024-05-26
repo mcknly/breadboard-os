@@ -4,6 +4,11 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 include(project.cmake)
+set(hardware_dir ${CMAKE_CURRENT_SOURCE_DIR}/hardware/${PLATFORM})
+if(EXISTS ${hardware_dir}/prebuild.cmake)
+    include(${hardware_dir}/prebuild.cmake)
+endif()
+
 
 project(${PROJ_NAME} C CXX ASM)
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
@@ -55,8 +60,8 @@ target_include_directories(${PROJ_NAME} PUBLIC
 add_subdirectory(${PROJECT_SOURCE_DIR}/rtos)
 add_subdirectory(${PROJECT_SOURCE_DIR}/services)
 add_subdirectory(${PROJECT_SOURCE_DIR}/driver_lib)
-if(DEFINED hardware_subdir)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/${hardware_subdir})
+if(DEFINED hardware_dir)
+    add_subdirectory(${hardware_dir})
 endif()
 
 # add any additional definitions, options
