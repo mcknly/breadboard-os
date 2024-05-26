@@ -12,6 +12,8 @@ set(PICO_BOARD pico)
 
 # ------------- Don't change anything below this line ------------
 
+add_definitions(-DBOARD_TYPE=${PICO_BOARD})    # pass the board type to the preprocessor for further decision making
+
 # Raspberry Pi Pico (RP2040) SDK
 include(pico_sdk_import.cmake)
 
@@ -22,6 +24,7 @@ endif()
 # initialize the Pico/RP2040 SDK
 pico_sdk_init()
 
-#target_link_libraries(${PROJ_NAME} PUBLIC
-#)
+set(hardware_libs "pico_unique_id" "pico_stdlib")
+set(hardware_includes hardware/rp2040)
+set(hardware_subdir ${PROJECT_SOURCE_DIR}/hardware/rp2040)
 

@@ -8,7 +8,6 @@ include(project.cmake)
 project(${PROJ_NAME} C CXX ASM)
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
 add_definitions(-DPROJECT_VERSION=${PROJ_VER}) # pass the project version number to the preprocessor for use in the code
-add_definitions(-DBOARD_TYPE=${PICO_BOARD})    # pass the board type to the preprocessor for further decision making
 add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 1: use USB for CLI
 #add_definitions(-DSCHED_TEST_DELAY) # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 
@@ -34,28 +33,30 @@ target_link_libraries(${PROJ_NAME} PUBLIC
     cli
     littlefs
     cmake_git_version_tracking
-    pico_stdlib
     hardware_i2c
     hardware_spi
     hardware_flash
     hardware_adc
     cmsis_core
-    pico_unique_id
     tinyusb_device
+    ${hardware_libs}
 )
 target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/rtos
     ${PROJECT_SOURCE_DIR}/services
-    ${PROJECT_SOURCE_DIR}/hardware/rp2040
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
+    ${PROJECT_SOURCE_DIR}/${hardware_includes}
 )
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/rtos)
 add_subdirectory(${PROJECT_SOURCE_DIR}/services)
-add_subdirectory(${PROJECT_SOURCE_DIR}/hardware/rp2040)
 add_subdirectory(${PROJECT_SOURCE_DIR}/driver_lib)
+if(DEFINED hardware_subdir)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/${hardware_subdir})
+endif()
 
 # add any additional definitions, options
 target_compile_definitions(${PROJ_NAME} PUBLIC 
@@ -68,9 +69,7 @@ target_compile_options(
 )
 # TODO: try to add -Wall and -Wextra to compile options to clean up more warnings
 
-# disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
-pico_enable_stdio_usb(${PROJ_NAME} 0)
-pico_enable_stdio_uart(${PROJ_NAME} 0)
-
-# generate UF2, dissassembly and map files, etc
-pico_add_extra_outputs(${PROJ_NAME})
+# Any pre-build stuff the hardware module needs, as a function
+if(COMMAND hardware_build_extra)
+    cmake_language(CALL hardware_build_extra)
+endif()
