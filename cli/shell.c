@@ -62,6 +62,7 @@ static const struct ush_io_interface ush_iface = {
 
 static char ush_in_buf[BUF_IN_SIZE];
 static char ush_out_buf[BUF_OUT_SIZE];
+static char ush_hist_buf[SHELL_HISTORY_LINES * SHELL_WORK_BUFFER_SIZE];
 
 // global microshell instance handler (extern declared in shell.h)
 struct ush_object ush;
@@ -73,9 +74,17 @@ static const struct ush_prompt_format ush_prompt = {
     .prompt_suffix = SHELL_PROMPT_SUFFIX
 };
 
+// microshell command history structure - sizes in shell.h
+static ush_history ush_cmd_hist = {
+    .lines = SHELL_HISTORY_LINES,
+    .length = SHELL_WORK_BUFFER_SIZE,
+    .buffer = ush_hist_buf
+};
+
 // microshell descriptor
 static const struct ush_descriptor ush_desc = {
     .io = &ush_iface,                           // I/O interface pointer
+    .input_history = &ush_cmd_hist,             // command history buffer
     .input_buffer = ush_in_buf,                 // working input buffer
     .input_buffer_size = sizeof(ush_in_buf),    // working input buffer size
     .output_buffer = ush_out_buf,               // working output buffer

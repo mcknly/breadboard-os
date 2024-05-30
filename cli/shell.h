@@ -26,14 +26,20 @@
     #define BUF_IN_SIZE    128
     #define BUF_OUT_SIZE   128
     #define PATH_MAX_SIZE  128
+    #define SHELL_HISTORY_LINES 6
+    #define SHELL_WORK_BUFFER_SIZE 256
 #elif defined(PICO)
     #define BUF_IN_SIZE    128
     #define BUF_OUT_SIZE   1024
     #define PATH_MAX_SIZE  128
+    #define SHELL_HISTORY_LINES 6
+    #define SHELL_WORK_BUFFER_SIZE 256
 #else
     #define BUF_IN_SIZE    32
     #define BUF_OUT_SIZE   32
     #define PATH_MAX_SIZE  32
+    #define SHELL_HISTORY_LINES 6
+    #define SHELL_WORK_BUFFER_SIZE 256
 #endif
 
 // custom prompt formatting -
