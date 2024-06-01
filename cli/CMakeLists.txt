@@ -19,6 +19,7 @@ target_compile_definitions(
 add_library(cli STATIC
     ${CMAKE_CURRENT_LIST_DIR}/shell.c
     ${CMAKE_CURRENT_LIST_DIR}/shell_cmd.c
+    ${CMAKE_CURRENT_LIST_DIR}/pinouts.c
     ${CMAKE_CURRENT_LIST_DIR}/cli_utils.c
     ${CMAKE_CURRENT_LIST_DIR}/node_root.c
     ${CMAKE_CURRENT_LIST_DIR}/node_dev.c

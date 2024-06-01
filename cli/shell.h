@@ -36,6 +36,10 @@
     #define PATH_MAX_SIZE  32
 #endif
 
+// Maximum number of pins that can be specified as a comma-separated list
+// in the cli, e.g. in the 'pinouts enable' command.
+#define MAX_PINSET_SIZE    10
+
 // custom prompt formatting -
 // microshell prompt format is prompt_prefix+HOST_NAME+prompt_space+[path]+prompt_suffix
 // see "ush_shell.h" for font formatting codes
