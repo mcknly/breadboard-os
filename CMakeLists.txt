@@ -49,6 +49,7 @@ target_link_libraries(${PROJ_NAME} PUBLIC
 )
 target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/rtos
     ${PROJECT_SOURCE_DIR}/services
     ${PROJECT_SOURCE_DIR}/driver_lib
