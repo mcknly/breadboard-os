@@ -28,7 +28,7 @@
 */
 static void clear_exec_callback(struct ush_object *self, struct ush_file_descriptor const *file, int argc, char *argv[])
 {
-    static char clear_msg[] =   USH_SHELL_CLEAR_SCREEN
+    static char clear_msg[] =   "" USH_SHELL_CLEAR_SCREEN
                                 USH_SHELL_HOME;
     shell_print(clear_msg);
 }
