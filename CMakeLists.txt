@@ -3,19 +3,19 @@ cmake_minimum_required(VERSION 3.18)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+# Project/hardware-specific setup - set platform in project.cmake
 include(project.cmake)
 set(hardware_dir ${CMAKE_CURRENT_SOURCE_DIR}/hardware/${PLATFORM})
 if(EXISTS ${hardware_dir}/prebuild.cmake)
     include(${hardware_dir}/prebuild.cmake)
 endif()
-
-
 project(${PROJ_NAME} C CXX ASM)
+
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
 add_definitions(-DPROJECT_VERSION=${PROJ_VER}) # pass the project version number to the preprocessor for use in the code
 add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 1: use USB for CLI
 add_definitions(-DBOARD=${BOARD})              # pass the board type to the preprocessor for further decision making
-#add_definitions(-DSCHED_TEST_DELAY) # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
+#add_definitions(-DSCHED_TEST_DELAY)           # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 
 # FreeRTOS
 include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
