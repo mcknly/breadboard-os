@@ -66,7 +66,7 @@ void hardware_init(void) {
     }
 
     // initialize the onboard LED gpio (if not a Pico W board)
-    if (HW_USE_ONBOARD_LED && strcmp(xstr(BOARD_TYPE), "pico_w") != 0) {
+    if (HW_USE_ONBOARD_LED && strcmp(xstr(BOARD), "pico_w") != 0) {
         onboard_led_init();
         uart_puts(UART_ID_CLI, "led ");
     }

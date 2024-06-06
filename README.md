@@ -64,18 +64,22 @@ It is suggested to add these commands to the user's `~/.profile`, `~/.bashrc`, e
 - Enter the project folder: `cd breadboard-os`
 - Pull in submodules: `git submodule update --init`
 
-Open the root `CMakeLists.txt` and edit the following parameters:
+Open `project.cmake` and edit the following parameters:
 ```
-### PROJECT SETTINGS ###
-
 # PROJECT NAME - in quotes, no spaces
 set(PROJ_NAME "my-bbos-proj")
+
 # PROJECT VERSION - in quotes, no spaces, can contain alphanumeric if necessary
 set(PROJ_VER "0.0")
+
 # CLI INTERFACE - 0: use UART for CLI (default), 1: use USB for CLI
 set(CLI_IFACE 0)
-# BOARD TYPE - set the RP2040 "board" being used (i.e. 'pico', 'pico_w', etc)
-set(PICO_BOARD pico)
+
+# MCU PLATFORM - set the MCU platform being used (i.e. the subdir in 'hardware/')
+set(PLATFORM rp2040)
+
+# BOARD - set the board being used (i.e. 'pico', 'pico_w', etc)
+set(BOARD pico)
 ```
 
 Using CLI over USB requires no additional hardware; using CLI over UART will require a USB-UART adapter (i.e. FTDI FT232 or SiLabs CP2102). Using CLI/UART enables some additional early boot status prints.
@@ -103,7 +107,7 @@ To understand how your new service can interact with the system, refer to the fu
 Project directory structure:  
 - `cli/` - directory/file structure for the CLI, and interface to the microshell submodule
 - `driver_lib/` - drivers for external peripheral hardware - library to grow over time
-- `hardware_pico/` - all hardware-specific (HAL) functional implementation for RP2040
+- `hardware/` - all hardware-specific (HAL) functional implementation, each MCU platform has its own subdirectory
 - `littlefs/` - contains the 'littlefs' submodule and CMake wrapper
 - `rtos/` - FreeRTOS interface & configuration files
 - `services/` - where the main application elements (FreeRTOS tasks) reside
