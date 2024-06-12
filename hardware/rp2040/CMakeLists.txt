@@ -23,7 +23,7 @@ function(hardware_build_extra)
     if(PICO_BOARD STREQUAL "pico_w")
         # Pass this parameter to the preprocessor if board type is pico_w
         # since some HW config needs to change
-        add_definitions(-DUSING_PICOW)
+        target_compile_definitions(cli PUBLIC -DUSING_PICOW)
     endif()
 
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
