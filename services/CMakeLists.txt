@@ -7,4 +7,5 @@ target_sources(${PROJ_NAME} PRIVATE
     storman_service.c
     watchdog_service.c
     heartbeat_service.c
+    services.c
 )

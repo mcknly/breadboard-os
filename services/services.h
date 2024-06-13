@@ -203,44 +203,46 @@ BaseType_t heartbeat_service(void);
 
 
 /************************
- * Service Arrays
+ * Service Definitions
 *************************/
 
-// function ptr array of available service functions above for launching with taskmanager.
-// note that taskmanager itself is not in this list (it is a base service).
-// the corresponding string in service_strings[] below will be used to match the service.
-// service_functions[] and service_strings[] need to be in the same order!
 typedef BaseType_t (*ServiceFunc_t)(void);
-static const ServiceFunc_t service_functions[] = {
-    cli_service,
-    usb_service,
-    storman_service,
-    watchdog_service,
-    heartbeat_service
-};
 
-// string versions of service names, used when comparing against user input.
-// use xstr() to convert the SERVICE_NAME_ #define to a usable string.
-// the corresponding index number in the service_functions[] array above will be the
-// function ptr to launch the service.
-// service_functions[] and service_strings[] need to be in the same order!
-static const char *service_strings[] = {
-    xstr(SERVICE_NAME_CLI),
-    xstr(SERVICE_NAME_USB),
-    xstr(SERVICE_NAME_STORMAN),
-    xstr(SERVICE_NAME_WATCHDOG),
-    xstr(SERVICE_NAME_HEARTBEAT)
-};
+/**
+ * Structure to hold the service name, service function and whether or not this is a startup service.
+ * TODO: add __attribute__((PACKED))?
+ */
+typedef struct ServiceDesc {
+    /**
+     * String version of the service name, used when comparing against user input.
+     * It is recommended to use xstr() to convert the SERVICE_NAME_ #define to a usable string (e.g. xstr(SERVICE_NAME_HEARTBEAT)).
+    */
+    const char * const name;
+    /**
+     * Defines wether or not this service should automatically get launched by taskmanager at boot.
+    */
+    const bool startup;
+    /**
+     * Function pointer to the service that creates the respective FreeRTOS task.
+    */
+    ServiceFunc_t service_func;
+} ServiceDesc_t;
 
-// startup services - launched automatically by taskmanager at boot.
-// these strings should match with what is in service_strings[] for the intended service.
-// these can be in any order, the corresponding FreeRTOS tasked will be launched in this order.
-static const char *startup_services[] = {
-    "usb",
-    "cli",
-    "storagemanager",
-    "watchdog"
-};
+/**
+ * Holds all the services that can be launched with taskmanager.
+ * These can be in any order, the corresponding FreeRTOS tasks will be launched in this order.
+ * Note: taskmanager itself is not in this list (it is a base service).
+ * 
+ * Edit services.c to add your own services!
+*/
+extern const ServiceDesc_t service_descriptors[];
+
+/**
+ * Amount of entries in the service_desriptors array.
+*/
+extern const int service_descriptors_length;
+
+
 
 
 #endif /* SERVICES_H */
