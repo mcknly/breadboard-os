@@ -238,9 +238,9 @@ typedef struct ServiceDesc {
 extern const ServiceDesc_t service_descriptors[];
 
 /**
- * Amount of entries in the service_desriptors array.
+ * Amount of entries in the service_descriptors array.
 */
-extern const int service_descriptors_length;
+extern const size_t service_descriptors_length;
 
 
 

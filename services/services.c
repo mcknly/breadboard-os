@@ -28,4 +28,4 @@
     }
 };
 
-const int service_descriptors_length = sizeof(service_descriptors)/sizeof(ServiceDesc_t);
+const size_t service_descriptors_length = sizeof(service_descriptors)/sizeof(ServiceDesc_t);
