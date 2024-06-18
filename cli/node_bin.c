@@ -226,14 +226,14 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
                 shell_print(err_msg);
             }
             else {
-                // Iterate through service_strings array to find the matching service index
+                // Iterate through service_descriptors array to find the matching service index
                 int i;
-                for (i = 0; i < (sizeof(service_strings)/sizeof(service_strings[0])); i++) {
-                    if (strcmp(argv[2], service_strings[i]) == 0) {
-                        service_functions[i](); // call the function pointer at the same index of the matched service string
+                for(i = 0; i < service_descriptors_length; i++) {
+                     if (strcmp(argv[2], service_descriptors[i].name) == 0) {
+                        service_descriptors[i].service_func();
                         break;
                     }
-                    if (i == ((sizeof(service_strings)/sizeof(service_strings[0]))-1)) {
+                    if (i == (service_descriptors_length - 1)) {
                         sprintf(err_msg, "%s is not an available service, try 'service list'", argv[2]);
                         shell_print(err_msg);
                         break;
@@ -276,15 +276,16 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
                                             "Available Services\tStatus\r\n"
                                             "------------------------------------\r\n"
                                             USH_SHELL_FONT_STYLE_RESET;
-        char *service_list_msg = pvPortMalloc(strlen(service_list_header) + (sizeof(service_strings) * (configMAX_TASK_NAME_LEN + 16)));
+        
+        char *service_list_msg = pvPortMalloc(strlen(service_list_header) + (service_descriptors_length * sizeof(char*) * (configMAX_TASK_NAME_LEN + 16)));
         TaskHandle_t service_taskhandle;
         char service_state[12];
 
         strcpy(service_list_msg, service_list_header);
 
         // interate through available services, get their states from RTOS
-        for (i = 0; i < (sizeof(service_strings)/sizeof(service_strings[0])); i++) {
-            service_taskhandle = xTaskGetHandle(service_strings[i]);
+        for (i = 0; i < service_descriptors_length; i++) {
+            service_taskhandle = xTaskGetHandle(service_descriptors[i].name);
             if (service_taskhandle == NULL) {
                 strcpy(service_state, "not started");
             }
@@ -306,9 +307,9 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
             }
             
             // copy current service name into table
-            strcpy(service_list_msg + strlen(service_list_msg), service_strings[i]);
+            strcpy(service_list_msg + strlen(service_list_msg), service_descriptors[i].name);
             // add an extra tab to short service names to make the table look better
-            if (strlen(service_strings[i]) < (configMAX_TASK_NAME_LEN - 8)) {
+            if (strlen(service_descriptors[i].name) < (configMAX_TASK_NAME_LEN - 8)) {
                 strcpy(service_list_msg + strlen(service_list_msg), "\t");
             }
             // copy current service state into table
