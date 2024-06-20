@@ -229,8 +229,8 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
                 // Iterate through service_descriptors array to find the matching service index
                 int i;
                 for(i = 0; i < service_descriptors_length; i++) {
-                     if (strcmp(argv[2], service_descriptors[i].name) == 0) {
-                        service_descriptors[i].service_func();
+                    if (strcmp(argv[2], service_descriptors[i].name) == 0) {
+                        service_descriptors[i].service_func(); // call the function pointer for the matching service
                         break;
                     }
                     if (i == (service_descriptors_length - 1)) {
@@ -276,8 +276,7 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
                                             "Available Services\tStatus\r\n"
                                             "------------------------------------\r\n"
                                             USH_SHELL_FONT_STYLE_RESET;
-        
-        char *service_list_msg = pvPortMalloc(strlen(service_list_header) + (service_descriptors_length * sizeof(char*) * (configMAX_TASK_NAME_LEN + 16)));
+        char *service_list_msg = pvPortMalloc(strlen(service_list_header) + (service_descriptors_length * (configMAX_TASK_NAME_LEN + 16)));
         TaskHandle_t service_taskhandle;
         char service_state[12];
 

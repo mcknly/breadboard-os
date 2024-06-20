@@ -75,7 +75,7 @@ static void prvTaskManagerTask(void *pvParameters)
     cli_uart_puts(timestamp());
     cli_uart_puts("Starting all bootup services...\r\n");
     int i;
-    for (i = 0; i < service_descriptors_length;i++) {
+    for (i = 0; i < service_descriptors_length; i++) {
         if(service_descriptors[i].startup) {
             service_descriptors[i].service_func();
         }
