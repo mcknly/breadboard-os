@@ -14,13 +14,19 @@ target_sources(${PROJ_NAME} PRIVATE
     hw_clocks.c
     hw_cores.c
     hw_versions.c
+    hw_map.c
 )
 
 function(hardware_build_extra)
     # initialize the Pico/RP2040 SDK
     pico_sdk_init()
 
-    if(PICO_BOARD STREQUAL "pico_w")
+    # The preprocessor can't do string comparisons, so we need to set
+    # board-specific definitions.
+    if(PICO_BOARD STREQUAL "pico")
+        add_definitions(-DBOARD_IS_RPI_PICO)
+    elseif(PICO_BOARD STREQUAL "pico_w")
+        add_definitions(-DBOARD_IS_RPI_PICO)
         # Pass this parameter to the preprocessor if board type is pico_w
         # since some HW config needs to change
         target_compile_definitions(cli PUBLIC -DUSING_PICOW)

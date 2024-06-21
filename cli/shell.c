@@ -93,6 +93,7 @@ extern void shell_bin_mount(void);
 extern void shell_proc_mount(void);
 extern void shell_etc_mount(void);
 extern void shell_lib_mount(void);
+extern void pinouts_commands_add(void);
 
 void shell_init(void)
 {
@@ -101,6 +102,7 @@ void shell_init(void)
 
     // add commands
     shell_commands_add();
+    pinouts_commands_add();
 
     // mount nodes (root must be first) - order printed with 'ls' follows reverse
     // of this mount order - if nodes are mounted on the fly later, they will
