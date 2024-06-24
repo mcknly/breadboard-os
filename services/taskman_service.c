@@ -74,14 +74,13 @@ static void prvTaskManagerTask(void *pvParameters)
     // launch startup services
     cli_uart_puts(timestamp());
     cli_uart_puts("Starting all bootup services...\r\n");
-    int i, j;
-    for (i = 0; i < (sizeof(startup_services)/sizeof(startup_services[0])); i++) {
-        for (j = 0; j < (sizeof(service_strings)/sizeof(service_strings[0])); j++) {
-            if (strcmp(service_strings[j], startup_services[i]) == 0) {
-                service_functions[j]();
-            }
+    int i;
+    for (i = 0; i < service_descriptors_length; i++) {
+        if(service_descriptors[i].startup) {
+            service_descriptors[i].service_func();
         }
     }
+
 
     // At this point the system is fully running. Print a message
     cli_uart_puts(timestamp());

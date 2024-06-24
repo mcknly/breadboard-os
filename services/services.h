@@ -33,12 +33,12 @@
  *            any time via 'taskmanager', the base service.
  * 
  *            If a new service is added, a SERVICE_NAME must be defined for it,
- *            the service implementation and FreeRTOS task launcher must be
+ *            and the service implementation and FreeRTOS task launcher must be
  *            created in a separate source file (see "heartbeat_service.c" for
- *            an example), its function pointer needs to be added to the
- *            'service_functions[]' array, string name added to 'service_strings[]'
- *            IN THE SAME ORDER, and then it can be added to 'startup_services[]'
- *            if it should run at boot.
+ *            an example). The service's "descriptor" then needs to be added
+ *            to the service_descriptors[] array in services.c, which associates
+ *            the service's main function pointer with its name string, and
+ *            defines whether the service should run at boot.
  * 
  *            The service schedule within FreeRTOS is determined by 3 parameters:
  *            Priority, Repeat, and Delay. Upon any given scheduler tick, the OS
@@ -48,6 +48,12 @@
  *            of times it will block itself for the specified number of ticks
  *            based on the DELAY parameter. This essentially means a task's run
  *            percentage (within a priority level) is given by REPEAT/DELAY.
+ * 
+ *            Pro tip: uncomment add_definitions(-DSCHED_TEST_DELAY) in the
+ *            top-level CMakeLists.txt to burn extra cycles in each service, and
+ *            then use the 'bin/top' CLI command to show FreeRTOS task runtime
+ *            percentages to help tune the scheduler! Don't forget to comment
+ *            this back out after testing!
  * 
  *            Note that by default, 1 OS tick is 1 ms.
  *            This can be changed in FreeRTOSConfig.h, see 'configTICK_RATE_HZ'
@@ -101,6 +107,8 @@
 // FreeRTOS stack sizes for the services - "stack" in this sense is dedicated heap memory for a task.
 // local variables within a service/task use this stack space.
 // If pvPortMalloc is called within a task, it will allocate directly from shared FreeRTOS heap.
+// Use 'bin/ps' command to show a service's min stack (memory usage high water mark)
+// to determine if too much/too little has been allocated.
 #define STACK_TASKMAN   512
 #define STACK_CLI       1024
 #define STACK_USB       1024
@@ -114,7 +122,8 @@
 *************************/
 
 // below are functions for launching the services.
-// pointers to these are added to service_functions[].
+// pointers to these are added to a service's .service_func descriptor item in
+// services.c
 
 /**
 * @brief Start the taskmanager service.
@@ -203,44 +212,33 @@ BaseType_t heartbeat_service(void);
 
 
 /************************
- * Service Arrays
+ * Service Descriptors
 *************************/
 
-// function ptr array of available service functions above for launching with taskmanager.
-// note that taskmanager itself is not in this list (it is a base service).
-// the corresponding string in service_strings[] below will be used to match the service.
-// service_functions[] and service_strings[] need to be in the same order!
-typedef BaseType_t (*ServiceFunc_t)(void);
-static const ServiceFunc_t service_functions[] = {
-    cli_service,
-    usb_service,
-    storman_service,
-    watchdog_service,
-    heartbeat_service
-};
+// service function pointer typedef
+typedef BaseType_t (*service_func_t)(void);
 
-// string versions of service names, used when comparing against user input.
-// use xstr() to convert the SERVICE_NAME_ #define to a usable string.
-// the corresponding index number in the service_functions[] array above will be the
-// function ptr to launch the service.
-// service_functions[] and service_strings[] need to be in the same order!
-static const char *service_strings[] = {
-    xstr(SERVICE_NAME_CLI),
-    xstr(SERVICE_NAME_USB),
-    xstr(SERVICE_NAME_STORMAN),
-    xstr(SERVICE_NAME_WATCHDOG),
-    xstr(SERVICE_NAME_HEARTBEAT)
-};
+// service descriptor structure to hold the service name, service function pointer and startup flag
+typedef struct service_desc_t {
+    // string version of the service name, used when comparing against user input
+    const char * const name;
 
-// startup services - launched automatically by taskmanager at boot.
-// these strings should match with what is in service_strings[] for the intended service.
-// these can be in any order, the corresponding FreeRTOS tasked will be launched in this order.
-static const char *startup_services[] = {
-    "usb",
-    "cli",
-    "storagemanager",
-    "watchdog"
-};
+    //Defines wether or not this service should be automatically launched by taskmanager at boot
+    const bool startup;
+
+    //Function pointer to the service that creates the respective FreeRTOS task - declared in services.h
+    service_func_t service_func;
+} service_desc_t;
+
+// holds all the services that can be launched with taskmanager.
+// these can be in any order, the corresponding FreeRTOS tasks will be launched in this order.
+// note: taskmanager itself is not in this array (it is a base service).
+// edit services.c to add your own services!
+extern const service_desc_t service_descriptors[];
+
+// number of service descriptors in the array is used to iterate through services
+// for startup and interaction
+extern const size_t service_descriptors_length;
 
 
 #endif /* SERVICES_H */
