@@ -276,7 +276,9 @@ static void service_exec_callback(struct ush_object *self, struct ush_file_descr
                                             "Available Services\tStatus\r\n"
                                             "------------------------------------\r\n"
                                             USH_SHELL_FONT_STYLE_RESET;
-        char *service_list_msg = pvPortMalloc(strlen(service_list_header) + (service_descriptors_length * (configMAX_TASK_NAME_LEN + 16)));
+        char *service_list_msg = pvPortMalloc(strlen(service_list_header) +
+                                 (service_descriptors_length *
+                                 (configMAX_TASK_NAME_LEN + 16))); // add 16 bytes per line for service state and whitespace
         TaskHandle_t service_taskhandle;
         char service_state[12];
 

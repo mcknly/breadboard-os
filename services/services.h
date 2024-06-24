@@ -216,10 +216,10 @@ BaseType_t heartbeat_service(void);
 *************************/
 
 // service function pointer typedef
-typedef BaseType_t (*ServiceFunc_t)(void);
+typedef BaseType_t (*service_func_t)(void);
 
 // service descriptor structure to hold the service name, service function pointer and startup flag
-typedef struct ServiceDesc_t {
+typedef struct service_desc_t {
     // string version of the service name, used when comparing against user input
     const char * const name;
 
@@ -227,14 +227,14 @@ typedef struct ServiceDesc_t {
     const bool startup;
 
     //Function pointer to the service that creates the respective FreeRTOS task - declared in services.h
-    ServiceFunc_t service_func;
-} ServiceDesc_t;
+    service_func_t service_func;
+} service_desc_t;
 
 // holds all the services that can be launched with taskmanager.
 // these can be in any order, the corresponding FreeRTOS tasks will be launched in this order.
 // note: taskmanager itself is not in this array (it is a base service).
 // edit services.c to add your own services!
-extern const ServiceDesc_t service_descriptors[];
+extern const service_desc_t service_descriptors[];
 
 // number of service descriptors in the array is used to iterate through services
 // for startup and interaction
