@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/git_version" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/littlefs/littlefs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/microshell" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/microshell/tests/Unity" vcs="Git" />
+  </component>
+</project>
