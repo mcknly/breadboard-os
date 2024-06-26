@@ -18,6 +18,9 @@
 #include <string.h>
 #include "hardware_config.h"
 
+#ifdef USING_CYW43
+#include "pico/cyw43_arch.h"
+#endif
 
 void hardware_init(void) {
     // mutexes for accessing hardware peripherals (created within each hw init function)
@@ -32,6 +35,14 @@ void hardware_init(void) {
 
     // initialize the uart for cli/microshell first for status prints
     cli_uart_init();
+
+    // on pico w, we need to initialize the wifi chip
+#ifdef USING_CYW43
+    if(cyw43_arch_init()) {
+        uart_puts(UART_ID_CLI, timestamp());
+        uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");
+    }
+#endif
 
     // get the last reset reason string
     char *reset_reason_string = get_reset_reason_string();
@@ -66,7 +77,7 @@ void hardware_init(void) {
     }
 
     // initialize the onboard LED gpio (if not a Pico W board)
-    if (HW_USE_ONBOARD_LED && strcmp(xstr(BOARD), "pico_w") != 0) {
+    if (HW_USE_ONBOARD_LED) {
         onboard_led_init();
         uart_puts(UART_ID_CLI, "led ");
     }

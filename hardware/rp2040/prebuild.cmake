@@ -7,5 +7,6 @@ set(hardware_includes ${hardware_dir})
 set(hardware_libs "pico_unique_id" "pico_stdlib")
 
 if(PICO_BOARD STREQUAL "pico_w")
-    list(APPEND hardware_libs "pico_cyw43_arch_none")
+    list(APPEND hardware_libs pico_cyw43_arch_none)
+    add_compile_definitions(USING_CYW43)
 endif()
