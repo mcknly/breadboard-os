@@ -38,7 +38,15 @@ if(PICO_BOARD STREQUAL pico_w)
     # Pass this parameter to the preprocessor if board type is pico_w
     # since some HW config needs to change
     target_compile_definitions(board_hal INTERFACE -DUSING_PICOW)
-    target_link_libraries(board_hal INTERFACE pico_cyw43_arch_none)
+
+    if(HW_WIFI)
+        message(STATUS "including lwIP stack for pico_w")
+        target_link_libraries(board_hal INTERFACE pico_cyw43_arch_lwip_sys_freertos)
+        target_include_directories(board_hal INTERFACE ${CMAKE_CURRENT_LIST_DIR}/lwip_config)
+    else()
+        message(STATUS "lwIP stack will be unavailable : HW_WIFI set to 0")
+        target_link_libraries(board_hal INTERFACE pico_cyw43_arch_none)
+    endif()
 endif()
 
 function(hardware_build_extra)

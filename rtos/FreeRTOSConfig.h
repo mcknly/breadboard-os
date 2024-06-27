@@ -83,7 +83,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   (230*1024) // figure out what linker will accept
+#define configTOTAL_HEAP_SIZE                   (192*1024) // figure out what linker will accept
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
