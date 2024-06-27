@@ -41,6 +41,9 @@ void hardware_init(void) {
     if(cyw43_arch_init()) {
         uart_puts(UART_ID_CLI, timestamp());
         uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");
+    } else {
+        uart_puts(UART_ID_CLI, timestamp());
+        uart_puts(UART_ID_CLI, "Initialized onboard wireless module\r\n");
     }
 #endif
 
