@@ -556,7 +556,7 @@ void uart1_set_data_callback(struct ush_object *self, struct ush_file_descriptor
 
 // dev directory files descriptor
 static const struct ush_file_descriptor dev_files[] = {
-#if HW_USE_ONBOARD_LED && !defined(USING_PICOW)
+#if HW_USE_ONBOARD_LED
     {
         .name = "led",                          // file name (required)
         .description = "onboard LED",           // optional file description
