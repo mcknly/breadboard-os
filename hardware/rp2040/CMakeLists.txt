@@ -1,5 +1,7 @@
+add_library(board_hal INTERFACE)
+
 # add source files to the top-level project
-target_sources(${PROJ_NAME} PRIVATE
+target_sources(board_hal INTERFACE
     hardware_config.c
     hw_gpio.c
     hw_uart.c
@@ -16,15 +18,32 @@ target_sources(${PROJ_NAME} PRIVATE
     hw_versions.c
 )
 
+target_include_directories(board_hal INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}
+)
+
+target_link_libraries(board_hal INTERFACE
+    pico_stdlib
+    pico_unique_id
+    hardware_i2c
+    hardware_spi
+    hardware_flash
+    hardware_adc
+    tinyusb_device
+)
+
+target_compile_definitions(board_hal INTERFACE CFG_TUSB_CONFIG_FILE="hardware_config.h")
+
+if(PICO_BOARD STREQUAL pico_w)
+    # Pass this parameter to the preprocessor if board type is pico_w
+    # since some HW config needs to change
+    target_compile_definitions(board_hal INTERFACE -DUSING_PICOW)
+    target_link_libraries(board_hal INTERFACE pico_cyw43_arch_none)
+endif()
+
 function(hardware_build_extra)
     # initialize the Pico/RP2040 SDK
     pico_sdk_init()
-
-    if(PICO_BOARD STREQUAL "pico_w")
-        # Pass this parameter to the preprocessor if board type is pico_w
-        # since some HW config needs to change
-        target_compile_definitions(cli PUBLIC -DUSING_PICOW)
-    endif()
 
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
     pico_enable_stdio_usb(${PROJ_NAME} 0)
