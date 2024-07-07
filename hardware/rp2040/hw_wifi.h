@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "pico/cyw43_arch.h"
+
 typedef uint32_t hw_wifi_country_t ;
 
 /*!
@@ -66,10 +68,46 @@ typedef uint32_t hw_wifi_country_t ;
 #define HW_WIFI_COUNTRY_UK                HW_WIFI_COUNTRY('G', 'B', 0)
 #define HW_WIFI_COUNTRY_USA               HW_WIFI_COUNTRY('U', 'S', 0)
 
+typedef enum{
+    HW_WIFI_AUTH_OPEN,
+    HW_WIFI_AUTH_WPA_TPIK_PSK,
+    HW_WIFI_AUTH_WPA2_AES_PSK,
+    HW_WIFI_AUTH_MIXED,
+} hw_wifi_auth_t ;
+
+typedef enum{
+    HW_WIFI_MODE_NONE,
+    HW_WIFI_MODE_STA,
+    HW_WIFI_MODE_AP,
+} hw_wifi_mode_t ;
+
+typedef enum{
+    HW_WIFI_STATUS_LINK_DOWN,
+    HW_WIFI_STATUS_JOINING,
+    HW_WIFI_STATUS_NOIP,
+    HW_WIFI_STATUS_UP,
+    HW_WIFI_STATUS_FAIL,
+    HW_WIFI_STATUS_BADAUTH,
+    HW_WIFI_STATUS_NONET,
+
+    HW_WIFI_STATUS_UNKNOWN,
+} hw_wifi_status_t ;
 
 bool hw_wifi_is_initialized();
 bool hw_wifi_init();
 bool hw_wifi_init_with_country(uint32_t country_code);
 void hw_wifi_deinit();
+
+// NOTE: the pico_w will _technically_ support simultaneous AP and STA mode
+// connections, but this implementation does not.
+void hw_wifi_enable_sta_mode();
+void hw_wifi_disable_sta_mode();
+void hw_wifi_enable_ap_mode(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+void hw_wifi_disable_ap_mode();
+
+const ip_addr_t *hw_wifi_get_addr();
+bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+bool hw_wifi_connect_status();
 
 #endif
