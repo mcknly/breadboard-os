@@ -16,6 +16,7 @@ target_sources(board_hal INTERFACE
     hw_clocks.c
     hw_cores.c
     hw_versions.c
+    wifi.c
 )
 
 target_include_directories(board_hal INTERFACE
