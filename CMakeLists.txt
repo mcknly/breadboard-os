@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.18)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+include(build_options.cmake)
+
 # Project/hardware-specific setup - set platform, board, and requested hardware
 # options in project.cmake
 include(project.cmake)

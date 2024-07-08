@@ -16,7 +16,6 @@ target_sources(board_hal INTERFACE
     hw_clocks.c
     hw_cores.c
     hw_versions.c
-    hw_wifi.c
 )
 
 target_include_directories(board_hal INTERFACE
@@ -36,16 +35,17 @@ target_link_libraries(board_hal INTERFACE
 target_compile_definitions(board_hal INTERFACE CFG_TUSB_CONFIG_FILE="hardware_config.h")
 
 if(PICO_BOARD STREQUAL pico_w)
-    # Pass this parameter to the preprocessor if board type is pico_w
-    # since some HW config needs to change
-    target_compile_definitions(board_hal INTERFACE -DUSING_PICOW)
+    target_compile_definitions(board_hal INTERFACE USING_CYW43=1)
 
     if(HW_WIFI)
-        message(STATUS "including lwIP stack for pico_w")
+        message(STATUS "including hw_wifi and lwIP stack for pico_w")
+        target_compile_definitions(board_hal INTERFACE HW_WIFI=1) # cmake options come through as quoted strings for some reason
+        target_sources(board_hal INTERFACE hw_wifi.c)
         target_link_libraries(board_hal INTERFACE pico_cyw43_arch_lwip_sys_freertos)
         target_include_directories(board_hal INTERFACE ${CMAKE_CURRENT_LIST_DIR}/lwip_config)
     else()
         message(STATUS "lwIP stack will be unavailable : HW_WIFI set to 0")
+        target_compile_definitions(board_hal INTERFACE HW_WIFI=0)
         target_link_libraries(board_hal INTERFACE pico_cyw43_arch_none)
     endif()
 endif()
