@@ -6,10 +6,10 @@
  * @author Cavin McKinley (MCKNLY LLC)
  *
  * @date 02-14-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cavin McKinley (MCKNLY LLC)
  *            Released under the MIT License
- * 
+ *
  *
  * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -111,9 +111,11 @@
 */
 
 /* SMP port only */
-#define configNUMBER_OF_CORES                   2
-#define configTICK_CORE                         1
+#define configNUM_CORES                         2
+#define configNUMBER_OF_CORES                   configNUM_CORES
+#define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           1
+#define configUSE_CORE_AFFINITY                 1
 
 /* RP2040 specific */
 #define configSUPPORT_PICO_SYNC_INTEROP         1
