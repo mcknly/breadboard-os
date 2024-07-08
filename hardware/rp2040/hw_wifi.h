@@ -108,6 +108,6 @@ void hw_wifi_disable_ap_mode();
 const ip_addr_t *hw_wifi_get_addr();
 bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
 bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
-bool hw_wifi_connect_status();
+hw_wifi_status_t hw_wifi_get_status();
 
 #endif

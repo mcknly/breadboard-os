@@ -10,10 +10,10 @@
  * @author Cavin McKinley (MCKNLY LLC)
  *
  * @date 02-14-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cavin McKinley (MCKNLY LLC)
  *            Released under the MIT License
- * 
+ *
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
 
@@ -31,7 +31,7 @@
  * Services - Dynamic tasks to run in FreeRTOS.
  *            Services can be launched at boot or started/suspended/stopped at
  *            any time via 'taskmanager', the base service.
- * 
+ *
  *            If a new service is added, a SERVICE_NAME must be defined for it,
  *            and the service implementation and FreeRTOS task launcher must be
  *            created in a separate source file (see "heartbeat_service.c" for
@@ -39,7 +39,7 @@
  *            to the service_descriptors[] array in services.c, which associates
  *            the service's main function pointer with its name string, and
  *            defines whether the service should run at boot.
- * 
+ *
  *            The service schedule within FreeRTOS is determined by 3 parameters:
  *            Priority, Repeat, and Delay. Upon any given scheduler tick, the OS
  *            will run the task (service) with the highest priority. After a task
@@ -48,13 +48,13 @@
  *            of times it will block itself for the specified number of ticks
  *            based on the DELAY parameter. This essentially means a task's run
  *            percentage (within a priority level) is given by REPEAT/DELAY.
- * 
+ *
  *            Pro tip: uncomment add_definitions(-DSCHED_TEST_DELAY) in the
  *            top-level CMakeLists.txt to burn extra cycles in each service, and
  *            then use the 'bin/top' CLI command to show FreeRTOS task runtime
  *            percentages to help tune the scheduler! Don't forget to comment
  *            this back out after testing!
- * 
+ *
  *            Note that by default, 1 OS tick is 1 ms.
  *            This can be changed in FreeRTOSConfig.h, see 'configTICK_RATE_HZ'
 *******************************************************************************/
@@ -83,7 +83,7 @@
 
 // number of sequential time slices to run each service before beginning the
 // delay interval set below. If a service should run most of the time, set REPEAT
-// to a higher number and DELAY to a lower number. 
+// to a higher number and DELAY to a lower number.
 #define REPEAT_TASKMAN      1
 #define REPEAT_CLI          1
 #define REPEAT_USB          1
@@ -210,6 +210,8 @@ BaseType_t watchdog_service(void);
 */
 BaseType_t heartbeat_service(void);
 
+
+BaseType_t wifi_service(void);
 
 /************************
  * Service Descriptors
