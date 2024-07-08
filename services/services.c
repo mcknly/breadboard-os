@@ -49,7 +49,11 @@ const service_desc_t service_descriptors[] = {
                 .name = xstr(SERVICE_NAME_HEARTBEAT),
                 .service_func = heartbeat_service,
                 .startup = false
-        },
+        }, {
+            .name = "wifi",
+            .service_func = wifi_service,
+            .startup = true
+        }
 };
 
 const size_t service_descriptors_length = sizeof(service_descriptors) / sizeof(service_desc_t);
