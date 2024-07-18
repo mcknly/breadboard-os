@@ -31,12 +31,12 @@ void main()
     // initialize any connected peripheral devices
     driver_init();
 
-//#if !defined(HW_WIFI) || (HW_WIFI == 0)
+#if !defined(HW_WIFI) || (HW_WIFI == 0)
     // register the taskmanager base service
     taskman_service();
-//#else
-//    wifi_service();
-//#endif
+#else
+    wifi_service();
+#endif
     // start the rtos scheduler (boot the system!)
     vTaskStartScheduler();
 

@@ -46,7 +46,6 @@ target_link_libraries(${PROJ_NAME} PUBLIC
     cli
     littlefs
     cmake_git_version_tracking
-    cmsis_core
     board_hal
 )
 target_include_directories(${PROJ_NAME} PUBLIC

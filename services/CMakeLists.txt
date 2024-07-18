@@ -10,7 +10,7 @@ target_sources(${PROJ_NAME} PRIVATE
     heartbeat_service.c
 )
 
-if (HW_WIFI)
+if (DEFINED HW_WIFI AND HW_WIFI)
     target_sources(${PROJ_NAME} PRIVATE wifi_service.c)
     if(NOT DEFINED ENV{WIFI_SSID} OR NOT DEFINED ENV{WIFI_PASSWORD})
         message(FATAL_ERROR "must define WIFI_SSID and WIFI_PASSWORD environment variables to use wifi")

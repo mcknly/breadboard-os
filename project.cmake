@@ -11,7 +11,4 @@ set(CLI_IFACE 0)
 set(PLATFORM rp2040)
 
 # BOARD - set the board being used (i.e. 'pico', 'pico_w', etc)
-set(BOARD pico_w)
-
-# HW_WIFI - set to 1 to request wifi support if your board has a wifi radio
-set(HW_WIFI 1)
+set(BOARD pico)

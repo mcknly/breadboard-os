@@ -78,7 +78,7 @@
 #define PRIORITY_CLI       1
 #define PRIORITY_USB       2
 #define PRIORITY_STORMAN   3
-#define PRIORITY_WATCHDOG  3
+#define PRIORITY_WATCHDOG  3 // todo: this needs to go back to 1 before final merge of the feature
 #define PRIORITY_HEARTBEAT 1
 
 // number of sequential time slices to run each service before beginning the

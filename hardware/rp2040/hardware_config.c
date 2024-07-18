@@ -35,7 +35,7 @@ void hardware_init(void) {
     // on pico w, we need to initialize the wifi chip
 
     // we only want to initialize the cyw43 arch if the hardware isn't using wifi
-#if (HW_WIFI == 0)
+#if (HW_WIFI == 0) & defined(USING_CYW43)
     #include "pico/cyw43_arch.h"
 
     if(cyw43_arch_init()) {
