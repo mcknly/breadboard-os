@@ -8,19 +8,15 @@
  * @author Cavin McKinley (MCKNLY LLC)
  *
  * @date 02-14-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cavin McKinley (MCKNLY LLC)
  *            Released under the MIT License
- * 
+ *
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
 
 #include <string.h>
 #include "hardware_config.h"
-
-#ifdef USING_CYW43
-#include "pico/cyw43_arch.h"
-#endif
 
 void hardware_init(void) {
     // mutexes for accessing hardware peripherals (created within each hw init function)
@@ -37,7 +33,11 @@ void hardware_init(void) {
     cli_uart_init();
 
     // on pico w, we need to initialize the wifi chip
-#ifdef USING_CYW43
+
+    // we only want to initialize the cyw43 arch if the hardware isn't using wifi
+#if (HW_WIFI == 0) & defined(USING_CYW43)
+    #include "pico/cyw43_arch.h"
+
     if(cyw43_arch_init()) {
         uart_puts(UART_ID_CLI, timestamp());
         uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");

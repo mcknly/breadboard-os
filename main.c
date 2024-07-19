@@ -6,10 +6,10 @@
  * @author Cavin McKinley (MCKNLY LLC)
  *
  * @date 02-14-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cavin McKinley (MCKNLY LLC)
  *            Released under the MIT License
- * 
+ *
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
 
@@ -31,9 +31,12 @@ void main()
     // initialize any connected peripheral devices
     driver_init();
 
+#if !defined(HW_WIFI) || (HW_WIFI == 0)
     // register the taskmanager base service
     taskman_service();
-
+#else
+    wifi_service();
+#endif
     // start the rtos scheduler (boot the system!)
     vTaskStartScheduler();
 

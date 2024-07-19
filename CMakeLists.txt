@@ -3,12 +3,19 @@ cmake_minimum_required(VERSION 3.18)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Project/hardware-specific setup - set platform in project.cmake
+include(build_options.cmake)
+
+# Project/hardware-specific setup - set platform, board, and requested hardware
+# options in project.cmake
 include(project.cmake)
+
+# Set the hardware directory and load any prebuild which may be present.
 set(hardware_dir ${CMAKE_CURRENT_SOURCE_DIR}/hardware/${PLATFORM})
 if(EXISTS ${hardware_dir}/prebuild.cmake)
     include(${hardware_dir}/prebuild.cmake)
 endif()
+
+# Main project definition
 project(${PROJ_NAME} C CXX ASM)
 
 add_definitions(-DPROJECT_NAME=${PROJ_NAME})   # pass the project name to the preprocessor for use in the code
@@ -39,13 +46,7 @@ target_link_libraries(${PROJ_NAME} PUBLIC
     cli
     littlefs
     cmake_git_version_tracking
-    hardware_i2c
-    hardware_spi
-    hardware_flash
-    hardware_adc
-    cmsis_core
-    tinyusb_device
-    ${hardware_libs}
+    board_hal
 )
 target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}
@@ -54,20 +55,16 @@ target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
-    ${PROJECT_SOURCE_DIR}/${hardware_includes}
 )
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/rtos)
 add_subdirectory(${PROJECT_SOURCE_DIR}/services)
 add_subdirectory(${PROJECT_SOURCE_DIR}/driver_lib)
+
 if(DEFINED hardware_dir)
     add_subdirectory(${hardware_dir})
 endif()
 
-# add any additional definitions, options
-target_compile_definitions(${PROJ_NAME} PUBLIC 
-    CFG_TUSB_CONFIG_FILE="hardware_config.h" # override standard TinyUSB config file location
-)
 target_compile_options(
     ${PROJ_NAME}
     PRIVATE

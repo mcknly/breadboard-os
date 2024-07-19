@@ -6,10 +6,10 @@
  * @author Cavin McKinley (MCKNLY LLC)
  *
  * @date 02-14-2024
- * 
+ *
  * @copyright Copyright (c) 2024 Cavin McKinley (MCKNLY LLC)
  *            Released under the MIT License
- * 
+ *
  *
  * FreeRTOS V202212.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -55,6 +55,7 @@
 #define configUSE_PREEMPTION                    1
 #define configUSE_TICKLESS_IDLE                 0
 #define configUSE_IDLE_HOOK                     0
+#define configUSE_PASSIVE_IDLE_HOOK             0
 #define configUSE_TICK_HOOK                     0
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    32
@@ -72,7 +73,7 @@
 #define configUSE_QUEUE_SETS                    1
 #define configUSE_TIME_SLICING                  1
 #define configUSE_NEWLIB_REENTRANT              0
-#define configENABLE_BACKWARD_COMPATIBILITY     0
+#define configENABLE_BACKWARD_COMPATIBILITY     1
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* System */
@@ -82,7 +83,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   (230*1024) // figure out what linker will accept
+#define configTOTAL_HEAP_SIZE                   (192*1024) // figure out what linker will accept
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -111,8 +112,10 @@
 
 /* SMP port only */
 #define configNUM_CORES                         2
-#define configTICK_CORE                         1
+#define configNUMBER_OF_CORES                   configNUM_CORES
+#define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           1
+#define configUSE_CORE_AFFINITY                 1
 
 /* RP2040 specific */
 #define configSUPPORT_PICO_SYNC_INTEROP         1
