@@ -93,6 +93,7 @@ typedef enum{
     HW_WIFI_STATUS_UNKNOWN,
 } hw_wifi_status_t ;
 
+void hw_wifi_hard_reset(void);
 bool hw_wifi_is_initialized();
 bool hw_wifi_init();
 bool hw_wifi_init_with_country(uint32_t country_code);

@@ -1,19 +1,47 @@
 #include "hw_wifi.h"
-
 #include "pico/cyw43_arch.h"
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+
+
+void hw_wifi_hard_reset(void) {
+    // toggle CYW43 WL_ON GPIO to make sure we are starting from POR
+    gpio_init(23);
+    gpio_set_dir(23, GPIO_OUT);
+    gpio_put(23, 0); // set WL_ON low to hold in reset
+    busy_wait_us(1000);
+    gpio_put(23,1); // release reset
+    // note: per the CYW43 data sheet, "wait at least 150ms after VDDC and
+    // VDDIO are available before initiating SDIO access". Should we have
+    // a hard pause here?
+}
 
 bool hw_wifi_is_initialized() {
     return cyw43_is_initialized(&cyw43_state);
 }
 
 bool hw_wifi_init() {
-    if (hw_wifi_is_initialized()) return true;
-    return !cyw43_arch_init();
+    if (hw_wifi_is_initialized()) {
+        return true;
+    }
+    else {
+        // force POR on wifi module
+        hw_wifi_hard_reset();
+        // initialize the wifi module
+        return !cyw43_arch_init();
+    }
 }
 
 bool hw_wifi_init_with_country(hw_wifi_country_t country_code) {
-    if (hw_wifi_is_initialized()) return true;
-    return !cyw43_arch_init_with_country(country_code);
+    if (hw_wifi_is_initialized()) {
+        return true;
+    }
+    else {
+        // force POR on wifi module
+        hw_wifi_hard_reset();
+        // initialize the wifi module
+        return !cyw43_arch_init_with_country(country_code);
+    }
 }
 
 void hw_wifi_deinit() {
