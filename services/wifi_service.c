@@ -17,9 +17,9 @@ BaseType_t wifi_service() {
     BaseType_t retval = xTaskCreate(
             prvWifiTask,
             "WifiTask",
-            configMINIMAL_STACK_SIZE,
+            1024,
             NULL,
-             1,
+            1,
             &xWifiTask);
 
     if (retval == pdPASS) {
