@@ -8,7 +8,7 @@ set(PROJ_VER "0.0")
 set(CLI_IFACE 0)
 
 # MCU PLATFORM - set the MCU platform being used (i.e. the subdir in 'hardware/')
-set(PLATFORM rp2040)
+set(PLATFORM rp2xxx)
 
-# BOARD - set the board being used (i.e. 'pico', 'pico_w', etc)
-set(BOARD pico)
+# BOARD - set the board being used (platform-specific prebuild.cmake contains more information about boards)
+set(BOARD pico2)
