@@ -29,7 +29,11 @@
 #include "semphr.h"
 
 
-#define MCU_NAME  RP2040_Cortex_M0
+#ifdef USING_RP2350
+#define MCU_NAME RP2350_Cortex_M33
+#else
+#define MCU_NAME RP2040_Cortex_M0
+#endif
 
 // stringify helper - use xstr() to convert #define to a usable string
 #define str(s) # s

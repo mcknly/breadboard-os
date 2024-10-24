@@ -122,6 +122,13 @@ extern uint64_t get_time_us(void);               // defined in hw_clocks.c
 #define RUN_TIME_STATS_time_us_64_divider       (1e6 / configTICK_RATE_HZ) // divider for proper runtime stats granularity
 #define portGET_RUN_TIME_COUNTER_VALUE()        (get_time_us() / RUN_TIME_STATS_time_us_64_divider) // function to use for run time stats timer
 
+/* RP2350 specific - ARMv8m/Cortex-m33 options */
+#define configENABLE_TRUSTZONE                  0
+#define configRUN_FREERTOS_SECURE_ONLY          1
+#define configENABLE_FPU                        1
+#define configENABLE_MPU                        0
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    16
+
 #include <assert.h>
 /* Define to trap errors during development. */
 #define configASSERT(x)                         assert(x)
