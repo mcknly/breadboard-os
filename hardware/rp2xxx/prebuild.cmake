@@ -21,5 +21,6 @@ endif()
 # If using a Pico wireless variant, include the cyw43 library
 # Any other board names that use cyw43 would have to be added here too
 if(PICO_BOARD STREQUAL "pico_w")
-    list(APPEND hardware_libs "pico_cyw43_arch_none")
+    list(APPEND hardware_libs pico_cyw43_arch_none)
+    add_compile_definitions(USING_CYW43)
 endif()
