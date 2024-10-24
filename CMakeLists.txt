@@ -4,6 +4,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 # Project/hardware-specific setup - set platform in project.cmake
+# Platform-specific prebuild.cmake contains more information about boards
 include(project.cmake)
 set(hardware_dir ${CMAKE_CURRENT_SOURCE_DIR}/hardware/${PLATFORM})
 if(EXISTS ${hardware_dir}/prebuild.cmake)
@@ -17,8 +18,8 @@ add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 
 add_definitions(-DBOARD=${BOARD})              # pass the board type to the preprocessor for further decision making
 #add_definitions(-DSCHED_TEST_DELAY)           # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 
-# FreeRTOS
-include($ENV{FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+# FreeRTOS kernel import (platform-specific)
+include($ENV{FREERTOS_KERNEL_PATH}/${freertos_port_path})
 
 # add cli/microshell library subdirectory (submodule)
 add_subdirectory(${PROJECT_SOURCE_DIR}/cli cli)
@@ -68,14 +69,14 @@ endif()
 target_compile_definitions(${PROJ_NAME} PUBLIC 
     CFG_TUSB_CONFIG_FILE="hardware_config.h" # override standard TinyUSB config file location
 )
+# hardware-specific build options, function defined in hardware/[platform]/CMakeLists.txt
+if(COMMAND hardware_build_extra)
+    cmake_language(CALL hardware_build_extra)
+endif()
+# global compiler options for the project
 target_compile_options(
     ${PROJ_NAME}
     PRIVATE
     -Werror -g -O0
 )
 # TODO: try to add -Wall and -Wextra to compile options to clean up more warnings
-
-# Any pre-build stuff the hardware module needs, as a function
-if(COMMAND hardware_build_extra)
-    cmake_language(CALL hardware_build_extra)
-endif()

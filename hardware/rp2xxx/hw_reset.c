@@ -19,11 +19,16 @@
 #include <string.h>
 #include "hardware_config.h"
 #include "hardware/watchdog.h"
-#include "hardware/regs/vreg_and_chip_reset.h"
 #include "pico/bootrom.h"
+
+#ifndef USING_RP2350
+#include "hardware/regs/vreg_and_chip_reset.h" // this register file does not exist for rp2350
+#endif
 
 reset_reason_t get_reset_reason(void) {
     reset_reason_t reset_reason;
+
+#ifndef USING_RP2350
     // RP2040 CHIP_RESET register - can tell us POR, RUN pin, or debugger reset
     io_rw_32 *chip_reset_reg = (io_rw_32 *)(VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET);
 
@@ -46,6 +51,9 @@ reset_reason_t get_reset_reason(void) {
         }
         else reset_reason = UNKNOWN; // can't determine reset reason
     }
+#else
+    reset_reason = UNKNOWN; // TODO: implement reset_reason for rp2350
+#endif
 
     return reset_reason;
 }

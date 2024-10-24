@@ -38,11 +38,11 @@ target_include_directories(cli PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/rtos
-    ${PROJECT_SOURCE_DIR}/hardware/rp2040
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/services
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
+    ${hardware_dir}
 )
 target_compile_options(
     cli
