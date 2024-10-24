@@ -20,9 +20,14 @@
 
 
 uint8_t get_chip_version(void){
+#ifdef USING_RP2350
+    return rp2350_chip_version();
+#else
     return rp2040_chip_version();
+#endif
 }
 
 uint8_t get_rom_version(void){
     return rp2040_rom_version();
+    // there currently is no rp2350_rom_version()
 }

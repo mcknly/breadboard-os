@@ -20,10 +20,14 @@ function(hardware_build_extra)
     # initialize the Pico/RP2040 SDK
     pico_sdk_init()
 
+    # Pass these parameters to the preprocessor if using specific board/chip types
+    # since some HW config needs to change
     if(PICO_BOARD STREQUAL "pico_w")
-        # Pass this parameter to the preprocessor if board type is pico_w
-        # since some HW config needs to change
         target_compile_definitions(cli PUBLIC -DUSING_PICOW)
+    endif()
+    if(PICO_PLATFORM STREQUAL "rp2350-arm-s") # the Pico SDK import will auto set this based on PICO_BOARD
+        target_compile_definitions(${PROJ_NAME} PUBLIC -DUSING_RP2350)
+        target_compile_definitions(cli PUBLIC -DUSING_RP2350)
     endif()
 
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
