@@ -19,7 +19,7 @@
 // maintain BreadboardOS version so it can be tracked along with custom project
 #define BBOS_NAME          "breadboard-os" // do not change
 #define BBOS_VERSION_MAJOR 0               // changed only for major release update
-#define BBOS_VERSION_MINOR 2               // changed only for minor release update
+#define BBOS_VERSION_MINOR 3               // changed only for minor release update
 
 // custom project name and version is defined in top level CMakeLists.txt
 // look for PROJ_NAME and PROJ_VER
