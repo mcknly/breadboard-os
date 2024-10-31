@@ -8,7 +8,15 @@ include(${hardware_dir}/pico_sdk_import.cmake)
 
 # Platform-specific variable for paths/libraries/etc
 set(hardware_includes ${hardware_dir})
-set(hardware_libs "pico_unique_id" "pico_stdlib")
+set(hardware_libs   "pico_unique_id"
+                    "pico_stdlib"
+                    "hardware_i2c"
+                    "hardware_spi"
+                    "hardware_flash"
+                    "hardware_adc"
+                    "cmsis_core"
+                    "tinyusb_device"                    
+)
 
 # FreeRTOS port subdirectory for this platform (relative to $FREERTOS_KERNEL_PATH)
 # If it is a RP2350 board the board name needs to be added here to select the right port

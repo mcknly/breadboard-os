@@ -40,12 +40,6 @@ target_link_libraries(${PROJ_NAME} PUBLIC
     cli
     littlefs
     cmake_git_version_tracking
-    hardware_i2c
-    hardware_spi
-    hardware_flash
-    hardware_adc
-    cmsis_core
-    tinyusb_device
     ${hardware_libs}
 )
 target_include_directories(${PROJ_NAME} PUBLIC
