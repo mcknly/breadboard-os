@@ -46,23 +46,23 @@ As they say, a Youtube video is worth 10^6 words.
 
 <div align="left">
 <img style="vertical-align:middle"
-     src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAAxElEQVR4Ac3QIbLCMBRG4X8rqDpkFTthBSwA93xEHRIRUVddVRXxbFVVZFx0VORhpgNzp2QDfOqeZK5I9KPc1lv0m9PBjM3Mhz2pcPvUjSLZ7rMkiJ+KkMpTsgaKppQmFYAoma7L+ApQPbnr9MUndsmrdeXtqtbESbXqxKTWHHWHu+Ks1kCgFgKDWg4IC+D0pb8URnYj5dLLKAEsG8C2ACS78znCKvc/jmHQCjHbY/+kjH08eT8yAZsJOnisZ4vz+tBvegHSopYlcAvIvAAAAABJRU5ErkJggg==
+     src="assets/hackaday.png"
 >
 <a href="https://hackaday.com/2024/05/14/breadboardos-a-command-line-interface-for-the-pico/">Hackaday</a><br>
 <img style="vertical-align:middle"
-     src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAaVBMVEX////11tbomZrkgoPjfoDrqqvpnp/22tv99/feYmTVGR7XLC/XLzPWIyffaWrhd3jYNjnYODvVFhzWJCjcVFbvuLn44uP66OjZQEP88PHTAADxwsLtr7DeXmD++vrcUVPaR0nzzM3WJiquvNIaAAAAiElEQVR4AcXJwRZDMBBA0UE0JDM6CUQQbf3/R7bdcqbn1MZbvM2Fi8vyolAlwE0fqKqNRURqanM/GBoids76FtUeXdcPYWSbx3IqdjYv3zdmqgAC/J9KaRUxoY8iPtjI+GQKIo5Mg4jMpEVEpkxE+wvJtS/JVuO2+RTGD/YSBs/bAlIdooZrewPZ7wcrkwv8OAAAAABJRU5ErkJggg==
+     src="assets/toms-hardware.png"
 >
 <a href="https://www.tomshardware.com/raspberry-pi/breadboardos-is-the-best-thing-since-sliced-bread-for-your-raspberry-pi-pico">Tom's Hardware</a><br>
 <img style="vertical-align:middle"
-     src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAOVBMVEVHcEz///////////////////////////////////////////////////////////////////////99PJZNAAAAE3RSTlMAVv+THgbpRqG29NtmhjYSK858PdAPTwAAAO1JREFUeAF90UGSwyAMRFHlY8sGHDC+/2GnoklU0UzIW7HoQg2Sv24k+WYBVvlCgU3mdoAsUxsPRWZWzHxGArPLRAFT5c2Rf92bdAyxBK6ePGl8mFOFotah9zV8jaPdgKTAOLqYk3ey4ajXYjUxJSuoXAS2ufxqdgNRgmEfqFii2f17W8/iQ7pYYmBKsYuWFAaYzYpjQVeauD6Acgr55CWv4joPTRLDHlVVc1hptkK2zUUA7RIsOFSqvS64+GcJgeq9lafj84R79tPHCVmOGIgT9PBzDHSbnlpIhxuGpiZu98DMzQMzvXpg5hr+UT+z1Ai829s8aQAAAABJRU5ErkJggg==
+     src="assets/adafruit.png"
 >
 <a href="https://blog.adafruit.com/2024/05/14/breadboardos-for-raspberry-pi-pico/">Adafruit</a><br>
 <img style="vertical-align:middle"
-     src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAABLFBMVEX6+vr////U1NStra2/v7/z8/NVVVUAAACYmJg5ODgVFRVcXFzv7++AgoZMT1XKysrj4+N2dnYVHiuliU2XeTRSSkKKjpdFRUZNTU7SoUXyvQD31Sj82Avqx1ISAABsY1vUmAD0zRDZrQAUCQCKioqll4S5ggC4eAC8kUeyrqba3N+Cg4AsLCxubm7v7fb6+f2lpKlDK37DsvJfLNGxn+Z1T9fe1vWcgeJ+WdnLvvDa1+PXzPTj3Pfz7v8jIyPo3Mr3ugCmewD89+732GwAAAiHelvhx5fet2vephFnTAChoaEyHwT54JLjvWb824X4wSLIvq3rrwLGiADszYTv2ajZpCX99Nazjwvwvjz95KXSw6QqAABOMgLfskvNrXlIIwCniWGXXwBrSxmXZQA4SHyvAAABhElEQVR4AWzR02IEMRSA4ZzRGXVQrm3bSG3bev93aOp2N//tF4f8CQRRkoFwAwVZKnBNRZaCIvBQw490LrJZaBiIJndLccaSbB0dHrqzc/MLi0soAAc9Xp8/EAyhzcNwJOqPReJ6godLyVQ6I3g8KE+brTnZbA5yiPmpqTI64MgA4MGpI4FWICCzMWYCEZ1/CiIWZWATzZxQ0HHpPxpYgnKZlMtQqqD+f6qM1Vq90Ww12p1ug6H6ByGBvX6r2x+UuoPykKHnD5qoA8vJuwQARvrfrwEbZwFAde1EkamuYwF+DMZ0uQJSQVRVVVlZjePaOnzbxuYW9W3PyEV3Ry16xnQX43vku/2DQ0p9qNjFRDHvHB2fpE8PzuBr5vnBBeNLdMSlhAzJY3p1TenZN9LD6+tVegNAANTbY9/FFaXHKx84jlBKg2d73kXb3hnh3fHBFT2+H5c/cOUhdRI5psEb/Ojx/uD4ZPznKs7R0/PziwAskn1IvZof9uumQN7GCGEK8ENZDAAIODFWBbR+YAAAAABJRU5ErkJggg==
+     src="assets/cnx-software.png"
 >
 <a href="https://www.cnx-software.com/2024/05/21/breadboardos-firmware-for-the-raspberry-pi-rp2040-features-a-linux-like-terminal/">CNX Software</a><br>
 <img style="vertical-align:middle"
-     src=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEaElEQVR4AbxWA5CkTQz9cSpduc5r2zjb9q1tn23btm3btm2b5c3lZfabmp7l7GGr3s5MI3n9kk7nH8O/gLpdSjNqMEYzdjKOMA7/BmxnDGP4M0pq/oydmzNmMN4y6A8gm/GSMY5R3ti5DeMQg/4SoEhlzXlZxmpM/GXMYZQBgSjGD2WydmcKqMXAZ53iO5H9YitPO58YrUHggDJRrwt5h0WT25AMcp7ag7zi4opFwr9hELkNyiCXid3Jo0cK+bUOy8vOGhD4qA1ggduAdLK8NoHMnk8jsydTyWVCd5zCJOew49c8lGwOjiCzZ2zn6TSy2TecfLpEGZN4BALZ2ibfDhFkdX4sWdyYSC5ju5FXUoLC3BRASZ+QaPLITCKHVQPkQI4L+hqv+wwCBCBOHt1ThK3TrF7yW1CHoT9Z/nkhY7XVeXwPrNlZDmF1egxZnRpDfi1DDfd/UQi4jsoSydz7pumc1w8i/2Yhchr/RsEsYaTkh2+7cIyJIQDfMYY5n6Ao7FGIw47dliFQFjYwl5sA2CLeUABKBNboRJ7JCRzHkeQ8qTvZbxgkBizuTCbLC+NYzj5wyicKI6fZvcmKxzBncXMi2RwaKbkU0CBIHw77dQPJ4vYk8gmNFl+FE6jeidz7pemTEZtxCocVA8jm8EhRym7bELJfPwjzSDie6481TGQSmT+Ygv1iVwisLYQAJHcZryoAA3BkcWsSxkRKrPVrESrOzF5Ml3nH+X3Iv2mIXm6Pnilkfn8y2ewfoY0XrgAIOE/vqSOQlawnACc4JQwbrkV9ML83WRfXMAOjdXQ1wHbnUDjEnMTcfvVAIeUdFYv9uQn4BEeR9YnRclrv8GgQ0EKAHDBkDScSf8tL48n65GgogjGlAjrO60Nmj6eSZ0oC34ROKEhyGKc5vcm/SbABAU4UTOL+I5bOM3rhtGCpD4HryCz8VgtNK75a58aS9dFRkNmYgF5N1AFcRd9OkZKc5o+moihxjYnHui//4HpBYjgyfzgF2QtjKoER+RA4m0OgWSEEeC9I8k2CCggFbMOmLgR+bcK4bqdDfhhFRQTr30YA4XQbmC6/bfcMR/5oYRAC2CxwXNxPwuCZlohNv40A9jos6y/ye6Ym4nD5XEOlEP02AvhtQiEyhcA5EwisNYlATh3ok0NgeGa+CtgcGakVG5XANB0Bz4wiEoADPMHyGPVORZyQjGhMch4Qo4ajQRAaDZxQK1IKQWlqBmfgJZRSbLdpMCf5RNSb/Am4909H4eGS3A0E1HYq/5Yr36ZEa+ugkPWRUfKI+bYNz/UcZ2vGvCNiIBMWo2SiwmkvWrHg3zgYCkAJqTFQwV+191lpyeDMCSWUwwAiaCJwf0HOZOdNQshh9QCcGiUZbwaut7GtR0pTCmmQ0Yg7qpbNgRG4CcUnsLQ/2e4dLvVFSm+9vJtSacuNWyskFiRUE8z0zhil/uegUYytWR4I65isGqiOCax3pDoQXbOB7JxKwuwl1D0/BsTHKcTH8HXPAXR7fEacZPznAAAAAElFTkSuQmCC
+     src="assets/electromaker.png"
 >
 <a href="https://www.electromaker.io/blog/article/transform-your-raspberry-pi-pico-with-breadboard-os">Electromaker</a>
 </div>
