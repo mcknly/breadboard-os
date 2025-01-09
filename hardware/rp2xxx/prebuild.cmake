@@ -21,7 +21,7 @@ set(hardware_libs   "pico_unique_id"
 # FreeRTOS port subdirectory for this platform (relative to $FREERTOS_KERNEL_PATH)
 # If it is a RP2350 board the board name needs to be added here to select the right port
 if(PICO_BOARD STREQUAL "pico2" OR PICO_BOARD STREQUAL "pico2_w")
-    set(freertos_port_path "portable/ThirdParty/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake")
+    set(freertos_port_path "portable/ThirdParty/Community-Supported-Ports/GCC/RP2350_ARM_NTZ/FreeRTOS_Kernel_import.cmake")
 else()
     set(freertos_port_path "portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake")
 endif()
