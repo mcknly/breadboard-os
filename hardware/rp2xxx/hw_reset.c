@@ -21,16 +21,13 @@
 #include "hardware/watchdog.h"
 #include "pico/bootrom.h"
 
-#ifndef USING_RP2350
+#ifdef USING_RP2040
 #include "hardware/regs/vreg_and_chip_reset.h" // this register file does not exist for rp2350
 #endif
 
+
 reset_reason_t get_reset_reason(void) {
     reset_reason_t reset_reason;
-
-#ifndef USING_RP2350
-    // RP2040 CHIP_RESET register - can tell us POR, RUN pin, or debugger reset
-    io_rw_32 *chip_reset_reg = (io_rw_32 *)(VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET);
 
     // first check if it was a watchdog reboot
     if (watchdog_caused_reboot()) {
@@ -40,22 +37,26 @@ reset_reason_t get_reset_reason(void) {
         else reset_reason = FORCED;  // program-forced watchdog reboot
     }
     else {
-        if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_PSM_RESTART_BITS) {
-            reset_reason = DEBUGGER; // reset from debugger -- currently this is not detecting correctly
-        }
-        else if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS) {
-            reset_reason = POWERON;  // power-on or brownout
-        }
-        else if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS) {
-            reset_reason = PIN;      // reset pin ("run" pin) toggled
-        }
-        else reset_reason = UNKNOWN; // can't determine reset reason
+#ifdef USING_RP2040
+    // RP2040 CHIP_RESET register - can tell us POR, RUN pin, or debugger reset
+    io_rw_32 *chip_reset_reg = (io_rw_32 *)(VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET);
+    if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_PSM_RESTART_BITS) {
+        reset_reason = DEBUGGER; // reset from debugger -- currently this is not detecting correctly
     }
-#else
+    else if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS) {
+        reset_reason = POWERON;  // power-on or brownout
+    }
+    else if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS) {
+        reset_reason = PIN;      // reset pin ("run" pin) toggled
+    }
+    else reset_reason = UNKNOWN; // can't determine reset reason
+#elif USING_RP2350
     reset_reason = UNKNOWN; // TODO: implement reset_reason for rp2350
+#else
+    reset_reason = UNKNOWN;
 #endif
-
     return reset_reason;
+    }
 }
 
 char* get_reset_reason_string(void) {
