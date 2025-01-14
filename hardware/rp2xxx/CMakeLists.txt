@@ -25,7 +25,11 @@ function(hardware_build_extra)
     if(PICO_BOARD STREQUAL "pico_w")
         target_compile_definitions(cli PUBLIC -DUSING_PICOW)
     endif()
-    if(PICO_PLATFORM STREQUAL "rp2350-arm-s") # the Pico SDK import will auto set this based on PICO_BOARD
+    if(PICO_PLATFORM STREQUAL "rp2040") # the Pico SDK import will auto set PICO_PLATFORM based on PICO_BOARD
+        target_compile_definitions(${PROJ_NAME} PUBLIC -DUSING_RP2040)
+        target_compile_definitions(cli PUBLIC -DUSING_RP2040)
+    endif()
+    if(PICO_PLATFORM STREQUAL "rp2350-arm-s") # the Pico SDK import will auto set PICO_PLATFORM based on PICO_BOARD
         target_compile_definitions(${PROJ_NAME} PUBLIC -DUSING_RP2350)
         target_compile_definitions(cli PUBLIC -DUSING_RP2350)
     endif()
