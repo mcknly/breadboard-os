@@ -29,6 +29,7 @@
 #include "semphr.h"
 
 
+// global MCU name - used throughout the codebase to differentiate architectures
 #ifdef USING_RP2350
 #define MCU_NAME RP2350_Cortex_M33
 #else
@@ -38,6 +39,27 @@
 // stringify helper - use xstr() to convert #define to a usable string
 #define str(s) # s
 #define xstr(s) str(s)
+
+
+/************************
+ * TABLE OF CONTENTS
+*************************
+search file for these keywords including the leading '*' to find section
+ * GPIO
+ * CLI UART
+ * Auxilliary UART
+ * I2C0 Master
+ * SPI0 Master
+ * On-board LED
+ * Watchdog Timer
+ * Chip Reset
+ * System Clocks/Timers
+ * System MCU Cores
+ * Chip Versions
+ * Chip Registers
+ * Onboard Flash
+ * ADC - Analog-to-Digital Coverters
+ * USB (TinyUSB) CDC
 
 
 /**
@@ -596,9 +618,12 @@ void force_watchdog_reboot(void);
 
 // Reset reason types
 typedef enum {POWERON,   // normal power-on reset
+              GLITCH,    // power supply glitch reset
+              BROWNOUT,  // brownout reset
               WATCHDOG,  // watchdog timeout reset
               FORCED,    // application-requested reset
               PIN,       // external pin-toggled reset
+              DOUBLETAP, // double-tap external pin reset
               DEBUGGER,  // attached debugger reset
               UNKNOWN    // reset reason could not be detected
              } reset_reason_t;
@@ -725,6 +750,23 @@ uint8_t get_chip_version(void);
 * @return version number
 */
 uint8_t get_rom_version(void);
+
+
+/************************
+ * Chip Registers
+*************************/
+
+/**
+* @brief Read a chip register.
+*
+* Reads and returns a single 32-bit register from the MCU's memory-mapped
+* register space.
+*
+* @param reg_addr address of the register to read
+*
+* @return 32-bit value of the register
+*/
+uint32_t read_chip_register(uint32_t reg_addr);
 
 
 /************************

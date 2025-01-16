@@ -10,6 +10,7 @@ target_sources(${PROJ_NAME} PRIVATE
     onboard_led.c
     onboard_flash.c
     hw_watchdog.c
+    hw_registers.c
     hw_reset.c
     hw_clocks.c
     hw_cores.c

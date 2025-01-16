@@ -16,7 +16,15 @@
  ******************************************************************************/
 
 #include <string.h>
+#include <stdint.h>
 #include "hardware_config.h"
+
+#ifdef USING_RP2040
+#include "hardware/regs/vreg_and_chip_reset.h"
+#elif USING_RP2350
+#include "hardware/structs/powman.h"
+#include "hardware/regs/powman.h"
+#endif
 
 #ifdef USING_CYW43
 #include "pico/cyw43_arch.h"
@@ -49,10 +57,20 @@ void hardware_init(void) {
 
     // get the last reset reason string
     char *reset_reason_string = get_reset_reason_string();
+    // get the last reset reason raw register value
+#ifdef USING_RP2040
+    uint32_t reset_state_reg_addr = VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET;
+#elif USING_RP2350
+    uint32_t reset_state_reg_addr = POWMAN_BASE + POWMAN_CHIP_RESET_OFFSET;
+#endif
+    char reset_reason_raw_reg[30];
+    sprintf(reset_reason_raw_reg, "Reset Register: 0x%08X\r\n", (unsigned int)read_chip_register(0x4010002c));
 
     // print the last reset reason
     uart_puts(UART_ID_CLI, timestamp());
     uart_puts(UART_ID_CLI, reset_reason_string);
+    uart_puts(UART_ID_CLI, timestamp());
+    uart_puts(UART_ID_CLI, reset_reason_raw_reg);
 
     // print hardware initialization status text. This will only be visible if
     // connected to the CLI UART; if CLI over USB is used it will not show initial
