@@ -105,8 +105,8 @@ size_t version_get_data_callback(struct ush_object *self, struct ush_file_descri
 */
 size_t resetreason_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
 {
-    // get reset reason string
-    char *reset_reason_string = get_reset_reason_string();
+    // get reset reason string using global reset reason type captured at boot
+    char *reset_reason_string = get_reset_reason_string(last_reset_reason);
     // copy the pointer to the reset reason string
     *data = (uint8_t*)reset_reason_string;
     // return data size

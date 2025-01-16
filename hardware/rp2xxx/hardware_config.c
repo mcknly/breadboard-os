@@ -30,6 +30,10 @@
 #include "pico/cyw43_arch.h"
 #endif
 
+
+// get the last reset reason and store it to global variable
+reset_reason_t last_reset_reason;
+
 void hardware_init(void) {
     // mutexes for accessing hardware peripherals (created within each hw init function)
     SemaphoreHandle_t gpio_mutex = NULL;
@@ -55,8 +59,9 @@ void hardware_init(void) {
     }
 #endif
 
-    // get the last reset reason string
-    char *reset_reason_string = get_reset_reason_string();
+    // get the last reset reason type & string
+    last_reset_reason = get_reset_reason(); // stored in global variable
+    char *reset_reason_string = get_reset_reason_string(last_reset_reason);
     // get the last reset reason raw register value
 #ifdef USING_RP2040
     uint32_t reset_state_reg_addr = VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET;
@@ -64,7 +69,7 @@ void hardware_init(void) {
     uint32_t reset_state_reg_addr = POWMAN_BASE + POWMAN_CHIP_RESET_OFFSET;
 #endif
     char reset_reason_raw_reg[30];
-    sprintf(reset_reason_raw_reg, "Reset Register: 0x%08X\r\n", (unsigned int)read_chip_register(0x4010002c));
+    sprintf(reset_reason_raw_reg, "Reset Register: 0x%08X\r\n", (unsigned int)read_chip_register(reset_state_reg_addr));
 
     // print the last reset reason
     uart_puts(UART_ID_CLI, timestamp());

@@ -33,16 +33,16 @@ reset_reason_t get_reset_reason(void) {
     reset_reason_t reset_reason;
 
 #ifdef USING_RP2040
-    // first check if it was a watchdog reboot
+    // RP2040 CHIP_RESET register is stored in LDO_POR block -
+    // it can tell us POR, RUN pin, or debugger reset
+    io_rw_32 *chip_reset_reg = (io_rw_32 *)(VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET);
+    // first check if it was a watchdog reboot before interrogating the reset register
     if (watchdog_caused_reboot()) {
         if (watchdog_enable_caused_reboot()) {
             reset_reason = WATCHDOG; // expiration of watchdog timer
         }
         else reset_reason = FORCED;  // program-forced watchdog reboot
     }
-    // RP2040 CHIP_RESET register is stored in LDO_POR block -
-    // it can tell us POR, RUN pin, or debugger reset
-    io_rw_32 *chip_reset_reg = (io_rw_32 *)(VREG_AND_CHIP_RESET_BASE + VREG_AND_CHIP_RESET_CHIP_RESET_OFFSET);
     else if (*chip_reset_reg & VREG_AND_CHIP_RESET_CHIP_RESET_HAD_PSM_RESTART_BITS) {
         reset_reason = DEBUGGER; // reset from debugger -- currently this is not detecting correctly
     }
@@ -55,7 +55,7 @@ reset_reason_t get_reset_reason(void) {
     else reset_reason = UNKNOWN; // can't determine reset reason
 #elif USING_RP2350
     // RP2350 CHIP_RESET register is stored in POWMAN block -
-    // it can tell us POR, RUN pin, or debugger reset
+    // it can tell us POR, RUN pin, or debugger reset, plus glitch & brownout
     powman_hw_t *powman_reg = powman_hw;
     if (powman_reg->chip_reset & POWMAN_CHIP_RESET_HAD_WATCHDOG_RESET_POWMAN_BITS) {
         reset_reason = WATCHDOG;  // reset from watchdog timeout
@@ -88,10 +88,8 @@ reset_reason_t get_reset_reason(void) {
     return reset_reason;
     }
 
-char* get_reset_reason_string(void) {
-    // get the last reset reason
-    reset_reason_t reset_reason = get_reset_reason();
-    static char reset_reason_string[40];
+char* get_reset_reason_string(reset_reason_t reset_reason) {
+    static char reset_reason_string[50];
     
     strcpy(reset_reason_string, "Last reset reason: ");
 

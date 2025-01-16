@@ -18,10 +18,15 @@
 #include <stdint.h>
 #include "hardware_config.h"
 #include "hardware/watchdog.h"
+#include "hardware/structs/watchdog.h"
 
 
 void watchdog_en(uint32_t delay_ms) {
     watchdog_enable(delay_ms, 1); // pause_on_debug true, should allow us to debug normally
+}
+
+void watchdog_dis(void) {
+    watchdog_disable();
 }
 
 void watchdog_kick(void) {
@@ -29,7 +34,7 @@ void watchdog_kick(void) {
 }
 
 void force_watchdog_reboot(void) {
-    // enable watchdog reboot
+    // force watchdog reboot
     watchdog_reboot(0, 0, WATCHDOG_DELAY_REBOOT_MS);
 
     // loop until watchdog reboot

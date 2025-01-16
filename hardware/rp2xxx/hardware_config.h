@@ -571,7 +571,7 @@ bool onboard_led_get(void);
 
 // Watchdog Timer Settings
 #define WATCHDOG_DELAY_MS        1000 // default watchdog timer delay
-#define WATCHDOG_DELAY_REBOOT_MS 1000 // delay for reboot function
+#define WATCHDOG_DELAY_REBOOT_MS 100  // delay for reboot function
 
 /**
 * @brief Enables the watchdog timer.
@@ -584,6 +584,17 @@ bool onboard_led_get(void);
 * @return nothing
 */
 void watchdog_en(uint32_t delay_ms);
+
+/**
+* @brief Disables the watchdog timer.
+*
+* This function disables the hardware watchdog timer.
+*
+* @param none
+*
+* @return nothing
+*/
+void watchdog_dis(void);
 
 /**
 * @brief Reset the watchdog timer.
@@ -628,6 +639,9 @@ typedef enum {POWERON,   // normal power-on reset
               UNKNOWN    // reset reason could not be detected
              } reset_reason_t;
 
+// Global reset reason type - set at boot
+extern reset_reason_t last_reset_reason;
+
 /**
 * @brief Get the reset reason.
 *
@@ -646,11 +660,11 @@ reset_reason_t get_reset_reason(void);
 * This function is a wrapper for get_reset_reason() which returns a human-readable
 * string that can be used for printing to the CLI.
 *
-* @param none
+* @param reset_reason reset reason given by reset_reason_t enum, provided by get_reset_reason()
 *
 * @return pointer to the reset reason string
 */
-char* get_reset_reason_string(void);
+char* get_reset_reason_string(reset_reason_t reset_reason);
 
 /**
 * @brief Reset chip to the bootloader.
