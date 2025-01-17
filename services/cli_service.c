@@ -15,6 +15,8 @@
 
 #include <microshell.h>
 #include <string.h>
+#include <git.h>
+#include "version.h"
 #include "hardware_config.h"
 #include "rtos_utils.h"
 #include "shell.h"
@@ -30,7 +32,7 @@
 
 static void prvCliTask(void *pvParameters); // microshell cli task
 TaskHandle_t xShellTask;
-//struct ush_object ush; // microshell instance handler - global is in shell.c
+char BBOS_VERSION_MOD; // global "modified version" variable - declared in version.h
 
 // main service function, creates FreeRTOS task from prvCliTask
 BaseType_t cli_service(void)
@@ -67,6 +69,9 @@ static void prvCliTask(void *pvParameters)
 {
     char print_string[PRINT_QUEUE_ITEM_SIZE];
     extern const char *bbos_header_ascii;
+
+    // Set the global "modified version" indicator if on a branch other than main
+    BBOS_VERSION_MOD = strcmp(git_Branch(), "main") ? '+' : ' ';
 
     // delay CLI startup to allow taskmanager to finish with its startup status prints
     vTaskDelay(DELAY_TASKMAN * 2);
