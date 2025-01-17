@@ -57,11 +57,12 @@ reset_reason_t get_reset_reason(void) {
     // RP2350 CHIP_RESET register is stored in POWMAN block -
     // it can tell us POR, RUN pin, or debugger reset, plus glitch & brownout
     powman_hw_t *powman_reg = powman_hw;
-    if (powman_reg->chip_reset & POWMAN_CHIP_RESET_HAD_WATCHDOG_RESET_POWMAN_BITS) {
-        reset_reason = WATCHDOG;  // reset from watchdog timeout
-    }
-    else if (powman_reg->chip_reset & POWMAN_CHIP_RESET_HAD_WATCHDOG_RESET_POWMAN_ASYNC_BITS) {
-        reset_reason = FORCED;  // reset from forced watchdog
+    // first check if it was a watchdog reboot before interrogating the reset register
+    if (watchdog_caused_reboot()) {
+        if (watchdog_enable_caused_reboot()) {
+            reset_reason = WATCHDOG; // expiration of watchdog timer
+        }
+        else reset_reason = FORCED;  // program-forced watchdog reboot
     }
     else if (powman_reg->chip_reset & POWMAN_CHIP_RESET_HAD_DP_RESET_REQ_BITS) {
         reset_reason = DEBUGGER;  // reset from ARM debugger
