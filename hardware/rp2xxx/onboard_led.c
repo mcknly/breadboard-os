@@ -19,7 +19,7 @@
 #include "pico/stdlib.h"
 
 
-#ifdef USING_CYW43
+#ifdef HAS_CYW43
 #include "pico/cyw43_arch.h"
 
 void onboard_led_init(void) {

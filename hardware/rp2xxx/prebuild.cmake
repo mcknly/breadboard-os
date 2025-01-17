@@ -33,5 +33,5 @@ endif()
 # Any other board names that use cyw43 would have to be added here too
 if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
     list(APPEND hardware_libs pico_cyw43_arch_none)
-    add_compile_definitions(USING_CYW43)
+    add_compile_definitions(HAS_CYW43)
 endif()

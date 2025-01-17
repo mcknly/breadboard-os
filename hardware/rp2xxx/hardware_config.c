@@ -26,7 +26,7 @@
 #include "hardware/regs/powman.h"
 #endif
 
-#ifdef USING_CYW43
+#ifdef HAS_CYW43
 #include "pico/cyw43_arch.h"
 #endif
 
@@ -47,17 +47,6 @@ void hardware_init(void) {
 
     // initialize the uart for cli/microshell first for status prints
     cli_uart_init();
-
-    // on pico w, we need to initialize the wifi chip
-#ifdef USING_CYW43
-    if(cyw43_arch_init()) {
-        uart_puts(UART_ID_CLI, timestamp());
-        uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");
-    } else {
-        uart_puts(UART_ID_CLI, timestamp());
-        uart_puts(UART_ID_CLI, "Initialized onboard wireless module\r\n");
-    }
-#endif
 
     // get the last reset reason type & string
     last_reset_reason = get_reset_reason(); // stored in global variable
@@ -133,4 +122,16 @@ void hardware_init(void) {
     }
 
     uart_puts(UART_ID_CLI, "}\r\n");
+
+    // initialize the wireless module
+    if (HW_USE_CYW43 && HAS_CYW43) {
+        if(cyw43_arch_init()) {
+            uart_puts(UART_ID_CLI, timestamp());
+            uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");
+        } else {
+            uart_puts(UART_ID_CLI, timestamp());
+            uart_puts(UART_ID_CLI, "Initialized onboard wireless module\r\n");
+        }
+    }
+
 }
