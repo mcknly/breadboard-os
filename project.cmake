@@ -11,4 +11,8 @@ set(CLI_IFACE 0)
 set(PLATFORM rp2xxx)
 
 # BOARD - set the board being used (platform-specific prebuild.cmake contains more information about boards)
-set(BOARD pico2)
+set(BOARD pico2_w)
+
+# BUILD OPTIONS - individual features which can be enabled or disabled
+option(ENABLE_MOTD "Enable Message of the Day print at boot" true)
+option(ENABLE_WIFI "Enable WiFi support" true)

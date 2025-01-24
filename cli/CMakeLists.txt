@@ -50,3 +50,8 @@ target_compile_options(
     -Werror -g -O0
 )
 # TODO: try to add -Wall and -Wextra to compile options to clean up more warnings
+
+# additional build options
+if(ENABLE_MOTD)
+        target_compile_definitions(cli PUBLIC -DPRINT_MOTD_AT_BOOT)
+endif()
