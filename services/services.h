@@ -191,7 +191,7 @@ BaseType_t storman_service(void);
 *
 * The networkmanager service is responsible for managing the network connection
 * (currently only WiFi). It brings up/down WiFi hardware, manages credentials,
-* and connects/disconnets from the wireless network. It also provides current
+* and connects/disconnets to/from the wireless network. It also provides current
 * network status upon request. The networkmanager also handles all network data
 * transport via the networkmanager data queue.
 *

@@ -1,3 +1,17 @@
+/******************************************************************************
+ * @file netman_service.c
+ *
+ * @brief networkmanager service implementation and FreeRTOS task creation.
+ *
+ * @author Cavin McKinley (MCKNLY LLC)
+ *
+ * @date 01-24-2025
+ *
+ * @copyright Copyright (c) 2025 Cavin McKinley (MCKNLY LLC)
+ *            Released under the MIT License
+ *
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************/
 
 #include "hardware_config.h"
 #include "rtos_utils.h"
@@ -33,8 +47,9 @@ BaseType_t netman_service(void)
         cli_print_raw("Network manager service started");
     } else {
         cli_print_raw("Error starting the network manager service");
-        // note these will only print if FreeRTOS/CLI is already running
-        // (won't print if network manager is a startup service)
+        // note these will only print inline if FreeRTOS/CLI is already running,
+        // if network manager is a startup service they will print when the task
+        // starts up
     }
 
     return xReturn;
