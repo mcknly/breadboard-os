@@ -1,16 +1,32 @@
-#ifndef rp2040_WIFI_H
-#define rp2040_WIFI_H
+/******************************************************************************
+ * @file hw_wifi.h
+ *
+ * @brief settings, definitions, typedefs and function prototypes for WiFi and
+ *        interacting with the CYW43 wireless module. Hardware and SDK-specific
+ *        implementation resides within these functions.
+ *
+ * @author Alec Lanter (Github @Kintar)
+ * @author Cavin McKinley (Github @mcknly)
+ *
+ * @date 01-24-2025
+ *
+ * @copyright Copyright (c) 2025 Alec Lanter, Cavin McKinley
+ *            Released under the MIT License
+ *
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************/
+
+#ifndef HW_WIFI_H
+#define HW_WIFI_H
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include "pico/cyw43_arch.h"
+
 
 typedef uint32_t hw_wifi_country_t ;
 
-/*!
- * \brief create a country code from the two character country and revision number
- */
+// create a country code from the two character country and revision number
 #define HW_WIFI_COUNTRY(A, B, REV) (hw_wifi_country_t)((unsigned char)(A) | ((unsigned char)(B) << 8) | ((REV) << 16))
 
 // Worldwide Locale (passive Ch12-14)
@@ -68,6 +84,7 @@ typedef uint32_t hw_wifi_country_t ;
 #define HW_WIFI_COUNTRY_UK                HW_WIFI_COUNTRY('G', 'B', 0)
 #define HW_WIFI_COUNTRY_USA               HW_WIFI_COUNTRY('U', 'S', 0)
 
+// wifi auth types
 typedef enum{
     HW_WIFI_AUTH_OPEN,
     HW_WIFI_AUTH_WPA_TPIK_PSK,
@@ -75,12 +92,14 @@ typedef enum{
     HW_WIFI_AUTH_MIXED,
 } hw_wifi_auth_t ;
 
+// wifi modes
 typedef enum{
     HW_WIFI_MODE_NONE,
     HW_WIFI_MODE_STA,
     HW_WIFI_MODE_AP,
 } hw_wifi_mode_t ;
 
+// wifi status
 typedef enum{
     HW_WIFI_STATUS_LINK_DOWN,
     HW_WIFI_STATUS_JOINED,
@@ -93,25 +112,187 @@ typedef enum{
     HW_WIFI_STATUS_UNKNOWN,
 } hw_wifi_status_t ;
 
+
+/**************************************************
+ * Wireless module (CYW43) initialization functions
+***************************************************/
+
+/**
+* @brief Perform a hard reset of the CYW43 module.
+*
+* Force a hard reset of the CYW43 module by toggling the reset pin with the
+* appropriate RP2xxx GPIO pin.
+*
+* @param none
+*
+* @return nothing
+*/
 void hw_wifi_hard_reset(void);
-bool hw_wifi_is_initialized();
-bool hw_wifi_init();
-bool hw_wifi_init_with_country(uint32_t country_code);
-void hw_wifi_deinit();
+
+/**
+* @brief Check if the CYW43 module is initialized.
+*
+* Performs a check to determine if the CYW43 module has already been initialized
+* so that it is not tried multiple times, with a boolean response to indicate.
+*
+* @param none
+*
+* @return true if the CYW43 module is already initialized, otherwise false
+*/
+bool hw_wifi_is_initialized(void);
+
+/**
+* @brief Initialize the CYW43 module without country code.
+*
+* Check weather the CYW43 module has already been initialized, and if not,
+* perform the initialization routine. This routine will also initialze the lwIP
+* stack. Note that this function does not use a country code, and will default
+* to the worldwide locale. This may not give the best performance in all regions.
+*
+* @param none
+*
+* @return true if initialization was successful, otherwise false
+*/
+bool hw_wifi_init(void);
+
+/**
+* @brief Initialize the CYW43 module with country code.
+*
+* Check weather the CYW43 module has already been initialized, and if not,
+* perform the initialization routine using the given country code. This routine
+* will also initialze the lwIP stack.
+*
+* @param country_code country code from the list of definitions in this file
+*
+* @return true if initialization was successful, otherwise false
+*/
+bool hw_wifi_init_with_country(hw_wifi_country_t country_code);
+
+/**
+* @brief De-initialize the CYW43 module.
+*
+* This will de-initialize the CYW43 driver and the lwIP stack.
+*
+* @param none
+*
+* @return nothing
+*/
+void hw_wifi_deinit(void);
+
+
+/*****************************
+ * WiFi mode control functions
+******************************/
 
 // NOTE: the pico_w will _technically_ support simultaneous AP and STA mode
 // connections, but this implementation does not.
-void hw_wifi_enable_sta_mode();
-void hw_wifi_disable_sta_mode();
+
+/**
+* @brief Enable STA mode for the WiFi module.
+*
+* This function will enable the STA mode for the WiFi module, disabling AP mode
+* if it is currently enabled.
+*
+* @param none
+*
+* @return nothing
+*/
+void hw_wifi_enable_sta_mode(void);
+
+/**
+* @brief Disable STA mode for the WiFi module.
+*
+* This function will disable the STA mode for the WiFi module.
+*
+* @param none
+*
+* @return nothing
+*/
+void hw_wifi_disable_sta_mode(void);
+
+/**
+* @brief Enable AP mode for the WiFi module.
+*
+* This function will enable the AP mode for the WiFi module, disabling STA mode
+* if it is currently enabled.
+*
+* @param ssid SSID string for the AP to broadcast
+* @param password password string for the AP
+* @param auth_type authentication type for the AP
+*
+* @return nothing
+*/
 void hw_wifi_enable_ap_mode(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
-void hw_wifi_disable_ap_mode();
 
-void hw_wifi_ipstack_init();
-void hw_wifi_ipstack_deinit();
+/**
+* @brief Disable AP mode for the WiFi module.
+*
+* This function will disable the AP mode for the WiFi module.
+*
+* @param none
+*
+* @return nothing
+*/
+void hw_wifi_disable_ap_mode(void);
 
+
+/**************************************
+ * WiFi connection and status functions
+***************************************/
+
+/**
+* @brief Connect to a WiFi network (blocking).
+*
+* Connect to a WiFi network with the given SSID, password, and authentication
+* type. This function will block until the connection is established.
+*
+* @param ssid SSID string of the network to connect to
+* @param password password string for the network
+* @param auth_type authentication type for the network
+*
+* @return true if the connection was successful, false if connection error detected
+*/
 bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
-bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
-const ip_addr_t *hw_wifi_get_addr();
-hw_wifi_status_t hw_wifi_get_status();
 
-#endif
+/**
+* @brief Connect to a WiFi network (non-blocking).
+*
+* Connect to a WiFi network with the given SSID, password, and authentication
+* type. This function can be called in a non-blocking fashion.
+*
+* @param ssid SSID string of the network to connect to
+* @param password password string for the network
+* @param auth_type authentication type for the network
+*
+* @return true if the connection was successful, false if connection error detected
+*/
+bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+
+/**
+* @brief Get the IP address of the WiFi module.
+*
+* This function will return the 32-bit integer representation of the IP address
+* of the WiFi module, assuming it is connected to a network. The returned address
+* will be zero if it has not yet been assigned. The IP address is provided with
+* a pointer to a struct with member 'addr' containing the 32-bit address.
+*
+* @param none
+*
+* @return pointer to the IP address struct for the WiFi module
+*/
+const ip_addr_t *hw_wifi_get_addr(void);
+
+/**
+* @brief Get the current status of the WiFi connection.
+*
+* This function will return the current status of the WiFi connection, given by
+* the hw_wifi_status_t enum.
+*
+* @param none
+*
+* @return enumeration providing the current status of the WiFi connection
+*/
+hw_wifi_status_t hw_wifi_get_status(void);
+
+
+#endif /* HW_WIFI_H */

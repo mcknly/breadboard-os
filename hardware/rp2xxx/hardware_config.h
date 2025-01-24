@@ -2,9 +2,10 @@
  * @file hardware_config.h
  *
  * @brief Settings and function prototypes for all interaction with MCU
- * hardware. Hardware-specific implementation resides within these functions -
- * it is intended that porting to a new MCU will require changes only to the
- * function implementations that reside in the /hardware_<mcu> folder.
+ *        hardware. Hardware-specific implementation resides within these
+ *        functions - it is intended that porting to a new MCU will require
+ *        changes only to the function implementations that reside in the
+ *        /hardware_<mcu> folder.
  *
  * @author Cavin McKinley (MCKNLY LLC)
  *
@@ -1076,6 +1077,9 @@ char cli_usb_getc(void);
 #if HAS_CYW43 == true && HW_USE_CYW43 == false && HW_USE_ONBOARD_LED == true
 #error "CYW43 must be enabled in hardware_config.h if using onboard LED"
 #endif
+
+// Note: due to complexity, all WiFi-specific typedefs, options, function
+// declarations and documentation are contained in the hw_wifi.h file.
 
 
 #endif /* HARDWARE_CONFIG_H */

@@ -1,8 +1,28 @@
+/******************************************************************************
+ * @file hw_wifi.c
+ *
+ * @brief Function implementations for WiFi connectivity using the CYW43
+ *        wireless module. The implementation of these functions is hardware and
+ *        SDK-specific and will need to be changed if ported to a new device.
+ *
+ * @author Alec Lanter (Github @Kintar)
+ * @author Cavin McKinley (Github @mcknly)
+ *
+ * @date 01-24-2025
+ *
+ * @copyright Copyright (c) 2025 Alec Lanter, Cavin McKinley
+ *            Released under the MIT License
+ *
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************/
+
 #include "hw_wifi.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 
+
+static hw_wifi_mode_t current_mode = HW_WIFI_MODE_NONE;
 
 void hw_wifi_hard_reset(void) {
     // toggle CYW43 WL_ON GPIO to make sure we are starting from POR
@@ -51,8 +71,6 @@ void hw_wifi_deinit() {
     cyw43_arch_deinit();
 }
 
-
-
 static uint32_t hw_wifi_auth_to_cyw43(hw_wifi_auth_t auth) {
     switch (auth) {
         case HW_WIFI_AUTH_MIXED:
@@ -66,10 +84,6 @@ static uint32_t hw_wifi_auth_to_cyw43(hw_wifi_auth_t auth) {
     }
 }
 
-static hw_wifi_mode_t current_mode = HW_WIFI_MODE_NONE;
-
-// NOTE: the pico_w will _technically_ support simultaneous AP and STA mode
-// connections, but this implementation does not.
 void hw_wifi_enable_sta_mode() {
     hw_wifi_disable_ap_mode();
     cyw43_arch_enable_sta_mode();
@@ -95,14 +109,6 @@ void hw_wifi_disable_ap_mode() {
     }
 }
 
-void hw_wifi_ipstack_init() {
-
-}
-
-void hw_wifi_ipstack_deinit() {
-    
-}
-
 bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type) {
     uint32_t cw_auth = hw_wifi_auth_to_cyw43(auth_type);
 
@@ -115,8 +121,8 @@ bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_
     return !cyw43_arch_wifi_connect_async(ssid, password, cw_auth);
 }
 
-// todo : this is locked to lwIP, and we maybe don't want that?
 const ip_addr_t *hw_wifi_get_addr() {
+    // query lwIP for address
     return netif_ip4_addr(netif_list);
 }
 
