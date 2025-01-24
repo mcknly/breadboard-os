@@ -77,7 +77,7 @@
 #define configUSE_QUEUE_SETS                    1
 #define configUSE_TIME_SLICING                  1
 #define configUSE_NEWLIB_REENTRANT              0
-#define configENABLE_BACKWARD_COMPATIBILITY     0
+#define configENABLE_BACKWARD_COMPATIBILITY     1 // needed for lwip FreeRTOS compatibility
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* System */
@@ -101,6 +101,10 @@
 #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 #define configRECORD_STACK_HIGH_ADDRESS         1
 
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES                   0
+#define configMAX_CO_ROUTINE_PRIORITIES         1
+
 /* Software timer related definitions. */
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               ( configMAX_PRIORITIES - 1 )
@@ -114,10 +118,15 @@
 #define configMAX_API_CALL_INTERRUPT_PRIORITY   [dependent on processor and application]
 */
 
-/* SMP port only */
-#define configNUM_CORES                         RTOS_NUM_CORES
+/* SMP port only - this is in mainline FreeRTOS 11 and up */
+/* these are defined in hardware/[platform]/rtos_config.h */
+#define configNUMBER_OF_CORES                   RTOS_NUM_CORES
 #define configTICK_CORE                         RTOS_TICK_CORE
 #define configRUN_MULTIPLE_PRIORITIES           RTOS_RUN_MULTIPLE_PRIORITIES
+#if configNUMBER_OF_CORES > 1
+#define configUSE_CORE_AFFINITY                 RTOS_USE_CORE_AFFINITY
+#endif
+#define configUSE_PASSIVE_IDLE_HOOK             RTOS_USE_PASSIVE_IDLE_HOOK
 
 #include <assert.h>
 /* Define to trap errors during development. */

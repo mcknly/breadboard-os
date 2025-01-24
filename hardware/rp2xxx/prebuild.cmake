@@ -15,7 +15,7 @@ set(hardware_libs   "pico_unique_id"
                     "hardware_flash"
                     "hardware_adc"
                     "cmsis_core"
-                    "tinyusb_device"                    
+                    "tinyusb_device"
 )
 
 # FreeRTOS port subdirectory for this platform (relative to $FREERTOS_KERNEL_PATH)
@@ -32,6 +32,17 @@ endif()
 # If using a Pico wireless variant, include the cyw43 library
 # Any other board names that use cyw43 would have to be added here too
 if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
-    list(APPEND hardware_libs pico_cyw43_arch_none)
     add_compile_definitions(HAS_CYW43)
+    if (ENABLE_WIFI)
+        # include CY43 lwIP/FreeRTOS support
+        list(APPEND hardware_libs   #"pico_cyw43_arch_lwip_sys_freertos"         # for lwip NO_SYS=0
+                                    "pico_cyw43_arch_lwip_threadsafe_background" # for lwip NO_SYS=1
+                                    "pico_lwip_http"
+                                    "pico_lwip_mdns"
+        )
+        list(APPEND hardware_includes ${hardware_dir}/lwip_config)
+    else()
+        list(APPEND hardware_libs pico_cyw43_arch_none) # basic CYW43 support
+        set(ENABLE_WIFI false)
+    endif()
 endif()

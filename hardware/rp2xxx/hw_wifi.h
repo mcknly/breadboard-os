@@ -83,7 +83,7 @@ typedef enum{
 
 typedef enum{
     HW_WIFI_STATUS_LINK_DOWN,
-    HW_WIFI_STATUS_JOINING,
+    HW_WIFI_STATUS_JOINED,
     HW_WIFI_STATUS_NOIP,
     HW_WIFI_STATUS_UP,
     HW_WIFI_STATUS_FAIL,
@@ -106,9 +106,12 @@ void hw_wifi_disable_sta_mode();
 void hw_wifi_enable_ap_mode(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
 void hw_wifi_disable_ap_mode();
 
-const ip_addr_t *hw_wifi_get_addr();
+void hw_wifi_ipstack_init();
+void hw_wifi_ipstack_deinit();
+
 bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
 bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+const ip_addr_t *hw_wifi_get_addr();
 hw_wifi_status_t hw_wifi_get_status();
 
 #endif

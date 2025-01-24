@@ -571,7 +571,7 @@ bool onboard_led_get(void);
 *************************/
 
 // Watchdog Timer Settings
-#define WATCHDOG_DELAY_MS        1000 // default watchdog timer delay
+#define WATCHDOG_DELAY_MS        5000 // default watchdog timer delay
 #define WATCHDOG_DELAY_REBOOT_MS 100  // delay for reboot function
 
 /**

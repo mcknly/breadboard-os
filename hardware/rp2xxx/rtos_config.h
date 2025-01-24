@@ -20,16 +20,24 @@
 
 
 // FreeRTOS total heap size settings - trial and error to find what linker will accept
-#ifdef USING_RP2350
-#define RTOS_HEAP_SIZE (480*1024) // RP2350 has 520KB RAM
-#else
-#define RTOS_HEAP_SIZE (230*1024) // RP2040 has 264KB RAM
+// RP2040 has 264KB RAM total, RP2350 has 520KB RAM total. RTOS heap will be something less than this.
+// Using the wireless stack appears to chew up about 30-40KB.
+#if defined(USING_RP2350) && !defined(HW_USE_WIFI)
+#define RTOS_HEAP_SIZE (480*1024) // RP2350 without wireless stack
+#elif defined(USING_RP2350) && defined(HW_USE_WIFI)
+#define RTOS_HEAP_SIZE (440*1024) // RP2350 with wireless stack
+#elif defined(USING_RP2040) && !defined(HW_USE_WIFI)
+#define RTOS_HEAP_SIZE (230*1024) // RP2040 without wireless stack
+#elif defined(USING_RP2040) && defined(HW_USE_WIFI)
+#define RTOS_HEAP_SIZE (188*1024) // RP2040 with wireless stack
 #endif
 
-// For FreeRTOS SMP port only
-#define RTOS_NUM_CORES                   2
-#define RTOS_TICK_CORE                   1
+// For FreeRTOS SMP (multicore) support only
+#define RTOS_NUM_CORES                   1
+#define RTOS_TICK_CORE                   0
 #define RTOS_RUN_MULTIPLE_PRIORITIES     1
+#define RTOS_USE_CORE_AFFINITY           1
+#define RTOS_USE_PASSIVE_IDLE_HOOK       0
 
 // RP2040/RP2350-specific FreeRTOS settings
 #define configSUPPORT_PICO_SYNC_INTEROP  1

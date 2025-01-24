@@ -69,6 +69,7 @@
 #define SERVICE_NAME_CLI        cli
 #define SERVICE_NAME_USB        usb
 #define SERVICE_NAME_STORMAN    storagemanager
+#define SERVICE_NAME_NETMAN     networkmanager
 #define SERVICE_NAME_WATCHDOG   watchdog
 #define SERVICE_NAME_HEARTBEAT  heartbeat
 
@@ -78,6 +79,7 @@
 #define PRIORITY_CLI       1
 #define PRIORITY_USB       2
 #define PRIORITY_STORMAN   3
+#define PRIORITY_NETMAN    3
 #define PRIORITY_WATCHDOG  1
 #define PRIORITY_HEARTBEAT 1
 
@@ -88,6 +90,7 @@
 #define REPEAT_CLI          1
 #define REPEAT_USB          1
 #define REPEAT_STORMAN      1
+#define REPEAT_NETMAN       1
 #define REPEAT_WATCHDOG     1
 #define REPEAT_HEARTBEAT    1
 
@@ -101,6 +104,7 @@
 #define DELAY_CLI          1     // CLI delay could be increased at the expense of character I/O responsiveness
 #define DELAY_USB          5
 #define DELAY_STORMAN      100
+#define DELAY_NETMAN       10    // This will impact network latency
 #define DELAY_WATCHDOG     100
 #define DELAY_HEARTBEAT    5000  // Example heartbeat service "beats" every 5 seconds when started
 
@@ -113,6 +117,7 @@
 #define STACK_CLI       1024
 #define STACK_USB       1024
 #define STACK_STORMAN   1024
+#define STACK_NETMAN    1024
 #define STACK_WATCHDOG  configMINIMAL_STACK_SIZE // 256 by default
 #define STACK_HEARTBEAT configMINIMAL_STACK_SIZE
 
@@ -180,6 +185,21 @@ BaseType_t usb_service(void);
 * @return 32-bit integer corresponding to FreeRTOS return status defined in projdefs.h
 */
 BaseType_t storman_service(void);
+
+/**
+* @brief Start the networkmanager service.
+*
+* The networkmanager service is responsible for managing the network connection
+* (currently only WiFi). It brings up/down WiFi hardware, manages credentials,
+* and connects/disconnets from the wireless network. It also provides current
+* network status upon request. The networkmanager also handles all network data
+* transport via the networkmanager data queue.
+*
+* @param none
+*
+* @return 32-bit integer corresponding to FreeRTOS return status defined in projdefs.h
+*/
+BaseType_t netman_service(void);
 
 /**
 * @brief Start the watchdog service.

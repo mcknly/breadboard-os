@@ -25,8 +25,9 @@ bool hw_wifi_init() {
         return true;
     }
     else {
-        // force POR on wifi module
-        hw_wifi_hard_reset();
+        // force POR on wifi module if we are unsure of state
+        // hw_wifi_hard_reset();
+
         // initialize the wifi module
         return !cyw43_arch_init();
     }
@@ -37,8 +38,9 @@ bool hw_wifi_init_with_country(hw_wifi_country_t country_code) {
         return true;
     }
     else {
-        // force POR on wifi module
-        hw_wifi_hard_reset();
+        // force POR on wifi module if we are unsure of state
+        // hw_wifi_hard_reset();
+
         // initialize the wifi module
         return !cyw43_arch_init_with_country(country_code);
     }
@@ -49,10 +51,7 @@ void hw_wifi_deinit() {
     cyw43_arch_deinit();
 }
 
-// todo : this is locked to lwIP, and we maybe don't want that?
-const ip_addr_t *hw_wifi_get_addr() {
-    return netif_ip4_addr(netif_list);
-}
+
 
 static uint32_t hw_wifi_auth_to_cyw43(hw_wifi_auth_t auth) {
     switch (auth) {
@@ -65,18 +64,6 @@ static uint32_t hw_wifi_auth_to_cyw43(hw_wifi_auth_t auth) {
         default:
             return CYW43_AUTH_OPEN;
     }
-}
-
-bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type) {
-    uint32_t cw_auth = hw_wifi_auth_to_cyw43(auth_type);
-
-    return !cyw43_arch_wifi_connect_blocking(ssid, password, cw_auth);
-}
-
-bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type) {
-    uint32_t cw_auth = hw_wifi_auth_to_cyw43(auth_type);
-
-    return !cyw43_arch_wifi_connect_async(ssid, password, cw_auth);
 }
 
 static hw_wifi_mode_t current_mode = HW_WIFI_MODE_NONE;
@@ -108,6 +95,31 @@ void hw_wifi_disable_ap_mode() {
     }
 }
 
+void hw_wifi_ipstack_init() {
+
+}
+
+void hw_wifi_ipstack_deinit() {
+    
+}
+
+bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth_type) {
+    uint32_t cw_auth = hw_wifi_auth_to_cyw43(auth_type);
+
+    return !cyw43_arch_wifi_connect_blocking(ssid, password, cw_auth);
+}
+
+bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type) {
+    uint32_t cw_auth = hw_wifi_auth_to_cyw43(auth_type);
+
+    return !cyw43_arch_wifi_connect_async(ssid, password, cw_auth);
+}
+
+// todo : this is locked to lwIP, and we maybe don't want that?
+const ip_addr_t *hw_wifi_get_addr() {
+    return netif_ip4_addr(netif_list);
+}
+
 hw_wifi_status_t hw_wifi_get_status() {
     // AP mode always returns LINKDOWN from cyw43
     if (current_mode == HW_WIFI_MODE_AP) {
@@ -119,7 +131,7 @@ hw_wifi_status_t hw_wifi_get_status() {
         case CYW43_LINK_DOWN:
             return HW_WIFI_STATUS_LINK_DOWN;
         case CYW43_LINK_JOIN:
-            return HW_WIFI_STATUS_JOINING;
+            return HW_WIFI_STATUS_JOINED;
         case CYW43_LINK_NOIP:
             return HW_WIFI_STATUS_NOIP;
         case CYW43_LINK_UP:

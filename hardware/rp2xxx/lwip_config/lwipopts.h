@@ -1,18 +1,26 @@
-#ifndef __LWIPOPTS_H__
-#define __LWIPOPTS_H__
+#ifndef LWIPOPTS_H
+#define LWIPOPTS_H
 
 
-#define TCPIP_THREAD_PRIO   2
-#define TCPIP_THREAD_STACKSIZE 2048 //1024
-#define DEFAULT_THREAD_STACKSIZE 1024
-#define DEFAULT_RAW_RECVMBOX_SIZE 8
-#define TCPIP_MBOX_SIZE 8
-#define LWIP_TIMEVAL_PRIVATE 0
+// Common settings used in most of the pico_w examples
+// from: https://github.com/raspberrypi/pico-examples/blob/master/pico_w/wifi/lwipopts_examples_common.h
+// (see https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html for details)
 
-#define LWIP_SOCKET                 1
+// NO_SYS true, since we are running the entire lwIP stack in a single thread.
+// This causes some issue with CYW43 init and blocking things like cyw43_arch_enable_sta_mode(),
+// so watchdog timeout needs to be sufficiently long to allow for this.
+#define NO_SYS                      1
 
+// allow override in some examples
+#ifndef LWIP_SOCKET
+#define LWIP_SOCKET                 0
+#endif
+#if PICO_CYW43_ARCH_POLL
 #define MEM_LIBC_MALLOC             1
-
+#else
+// MEM_LIBC_MALLOC is incompatible with non polling versions
+#define MEM_LIBC_MALLOC             0
+#endif
 #define MEM_ALIGNMENT               4
 #define MEM_SIZE                    4000
 #define MEMP_NUM_TCP_SEG            32
@@ -29,7 +37,7 @@
 #define LWIP_NETIF_STATUS_CALLBACK  1
 #define LWIP_NETIF_LINK_CALLBACK    1
 #define LWIP_NETIF_HOSTNAME         1
-#define LWIP_NETCONN                1
+#define LWIP_NETCONN                0
 #define MEM_STATS                   0
 #define SYS_STATS                   0
 #define MEMP_STATS                  0
@@ -43,7 +51,7 @@
 #define LWIP_DNS                    1
 #define LWIP_TCP_KEEPALIVE          1
 #define LWIP_NETIF_TX_SINGLE_PBUF   1
-#define DHCP_DOES_ARP_CHECK         1
+#define DHCP_DOES_ARP_CHECK         0
 #define LWIP_DHCP_DOES_ACD_CHECK    0
 
 #ifndef NDEBUG
@@ -82,8 +90,34 @@
 #define DHCP_DEBUG                  LWIP_DBG_OFF
 
 
-#define DEFAULT_TCP_RECVMBOX_SIZE 128
+/*******************************
+ * Application-specific settings
+********************************/
 
+// The following is needed to test mDns
+#define LWIP_MDNS_RESPONDER 1
+#define LWIP_IGMP 1
+#define LWIP_NUM_NETIF_CLIENT_DATA 1
+#define MDNS_RESP_USENETIF_EXTCALLBACK  1
+#define MEMP_NUM_SYS_TIMEOUT (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 3)
+#define MEMP_NUM_TCP_PCB 12
 
+// Enable cgi and ssi
+#define LWIP_HTTPD_CGI 1
+#define LWIP_HTTPD_SSI 1
+#define LWIP_HTTPD_SSI_MULTIPART 1
 
-#endif /* __LWIPOPTS_H__ */
+// FreeRTOS-specific settings
+#define TCPIP_THREAD_STACKSIZE 2048 // mDNS needs more stack
+#define DEFAULT_THREAD_STACKSIZE 1024
+#define DEFAULT_RAW_RECVMBOX_SIZE 8
+#define TCPIP_MBOX_SIZE 8
+#define LWIP_TIMEVAL_PRIVATE 0
+
+// not necessary, can be done either way
+#define LWIP_TCPIP_CORE_LOCKING_INPUT 1
+
+// filename for httpd content generated with pico_set_lwip_httpd_content
+//#define HTTPD_FSDATA_FILE "pico_fsdata.inc"
+
+#endif /* LWIPOPTS_H */

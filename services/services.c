@@ -34,17 +34,24 @@ const service_desc_t service_descriptors[] = {
         .name = xstr(SERVICE_NAME_CLI), 
         .service_func = cli_service,
         .startup = true
-    }, 
+    },
     {
         .name = xstr(SERVICE_NAME_STORMAN), 
         .service_func = storman_service,
         .startup = true
-    }, 
+    },
+#ifdef HW_USE_WIFI
+    {
+        .name = xstr(SERVICE_NAME_NETMAN), 
+        .service_func = netman_service,
+        .startup = false
+    },
+#endif
     {
         .name = xstr(SERVICE_NAME_WATCHDOG), 
         .service_func = watchdog_service,
         .startup = true
-    }, 
+    },
     {
         .name = xstr(SERVICE_NAME_HEARTBEAT), 
         .service_func = heartbeat_service,
