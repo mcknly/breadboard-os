@@ -27,6 +27,7 @@ add_library(cli STATIC
     ${CMAKE_CURRENT_LIST_DIR}/node_mnt.c
     ${CMAKE_CURRENT_LIST_DIR}/node_etc.c
     ${CMAKE_CURRENT_LIST_DIR}/node_lib.c
+    ${CMAKE_CURRENT_LIST_DIR}/node_net.c
 )
 target_link_libraries(cli PUBLIC
     microshell

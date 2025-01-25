@@ -1070,11 +1070,12 @@ char cli_usb_getc(void);
 
 // Enable CYW43 wireless module - setting to false will disable (not initialized at boot)
 // This only applies to boards with the wireless module, otherwise it is ignored.
-// note that if using the onboard LED, the CYW43 must be enabled (LED is controlled by CYW43)
-#define HW_USE_CYW43 true
+// note that if using the onboard LED, the CYW43 must be enabled (LED is controlled by CYW43).
+// Individual wireless features (WiFi/BT/etc) are individually enabled in project.cmake.
+#define HW_USE_WIRELESS true
 
 // Make sure CYW43 is enabled if using onboard LED
-#if HAS_CYW43 == true && HW_USE_CYW43 == false && HW_USE_ONBOARD_LED == true
+#if HAS_CYW43 == true && HW_USE_WIRELESS == false && HW_USE_ONBOARD_LED == true
 #error "CYW43 must be enabled in hardware_config.h if using onboard LED"
 #endif
 

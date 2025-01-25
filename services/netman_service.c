@@ -17,6 +17,7 @@
 #include "rtos_utils.h"
 #include "services.h"
 #include "service_queues.h"
+#include "shell.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -25,6 +26,8 @@
 
 static void prvNetworkManagerTask(void *pvParameters); // network manager task
 TaskHandle_t xNetManTask;
+
+extern void shell_net_mount(void); // declared in this file so /net can be mounted on-the-fly
 
 // main service function, creates FreeRTOS task from prvNetworkManagerTask
 BaseType_t netman_service(void)
@@ -56,15 +59,15 @@ BaseType_t netman_service(void)
 }
 
 static void prvNetworkManagerTask(void *pvParameters) {
-    bool connecting = false;
     cli_print_raw("initializing wifi...");
-    // todo: wifi country should be configurable
-    if (hw_wifi_init()) {
+    if (hw_wifi_init()) { // todo: wifi country should be configurable
         cli_print_raw("wifi initialized");
         hw_wifi_enable_sta_mode();
         cli_print_raw("station mode enabled, attempting to join network");
         if (hw_wifi_connect_async(WIFI_SSID, WIFI_PWD, HW_WIFI_AUTH_WPA2_AES_PSK)) {
             cli_print_raw("scanning...");
+            // currently the connection routine below will never time out.
+            // but because we're non-blocking in a task, meh.
             while(hw_wifi_get_status() != HW_WIFI_STATUS_JOINED) {
                 vTaskDelay(100); // spin every 100 OS ticks until connected to WiFi
             }
@@ -73,6 +76,9 @@ static void prvNetworkManagerTask(void *pvParameters) {
             }
             cli_print_raw("wifi connected: ");
             cli_print_raw(ip4addr_ntoa(hw_wifi_get_addr()));
+            // mount the /net directory in the CLI
+            shell_net_mount(); // create '/net' node in the shell
+            cli_print_raw("wifi device node created in /net");
         } else {
             cli_print_raw("could not start wifi connection");
         }

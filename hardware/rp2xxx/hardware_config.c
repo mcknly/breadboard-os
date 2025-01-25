@@ -125,9 +125,9 @@ void hardware_init(void) {
     uart_puts(UART_ID_CLI, "}\r\n");
 
     // initialize the wireless module
-    // if we are using wifi, this is done in the FreeRTOS task instead, since
+    // if wifi is enabled, this is done in the FreeRTOS task instead, since
     // the init function uses the pico-sdk lwip/FreeRTOS port in this case
-    if (HW_USE_CYW43 && HAS_CYW43 && !HW_USE_WIFI) {
+    if (HW_USE_WIRELESS && HAS_CYW43 && !HW_USE_WIFI) {
         if(hw_wifi_init()) {
             uart_puts(UART_ID_CLI, timestamp());
             uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");

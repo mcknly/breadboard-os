@@ -102,6 +102,7 @@ extern void shell_bin_mount(void);
 extern void shell_proc_mount(void);
 extern void shell_etc_mount(void);
 extern void shell_lib_mount(void);
+extern void shell_net_mount(void);
 
 void shell_init(void)
 {
@@ -121,6 +122,7 @@ void shell_init(void)
     shell_bin_mount();
     shell_etc_mount();
     // note that /mnt is currently mounted by storagemanager service
+    // note that /net is currently mounted by networkmanager service
 }
 
 void shell_service(void)
