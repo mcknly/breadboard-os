@@ -31,9 +31,9 @@ add_library(cli STATIC
 )
 target_link_libraries(cli PUBLIC
     microshell
-    pico_stdlib
     FreeRTOS-Kernel
     cmake_git_version_tracking
+    ${hardware_libs}
 )
 target_include_directories(cli PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
@@ -43,16 +43,19 @@ target_include_directories(cli PUBLIC
     ${PROJECT_SOURCE_DIR}/services
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
-    ${hardware_dir}
+    ${hardware_includes}
 )
+
+# add any additional definitions, options
+target_compile_definitions(cli PUBLIC 
+    CFG_TUSB_CONFIG_FILE="hardware_config.h" # override standard TinyUSB config file location
+)
+if(ENABLE_MOTD)
+        target_compile_definitions(cli PUBLIC -DPRINT_MOTD_AT_BOOT)
+endif()
 target_compile_options(
     cli
     PRIVATE
     -Werror -g -O0
 )
 # TODO: try to add -Wall and -Wextra to compile options to clean up more warnings
-
-# additional build options
-if(ENABLE_MOTD)
-        target_compile_definitions(cli PUBLIC -DPRINT_MOTD_AT_BOOT)
-endif()
