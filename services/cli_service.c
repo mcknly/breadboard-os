@@ -76,7 +76,7 @@ static void prvCliTask(void *pvParameters)
     BBOS_VERSION_MOD = strcmp(git_Branch(), "main") ? '+' : ' ';
 
     // delay CLI startup to allow taskmanager to finish with its startup status prints
-    vTaskDelay(DELAY_TASKMAN * 2);
+    vTaskDelay(DELAY_TASKMAN * 5);
 
     // print MOTD for additional YouTube likes
     if (PRINT_MOTD_AT_BOOT) {
@@ -92,8 +92,10 @@ static void prvCliTask(void *pvParameters)
     }
 
     // copy the CLI ASCII header into RAM
-    char *cli_header = pvPortMalloc(strlen(bbos_header_ascii+1));
+    char *cli_header = pvPortMalloc(strlen(bbos_header_ascii+2)); // two extra bytes for BBOS_VERSION_MOD and NULL
     strcpy(cli_header, bbos_header_ascii);
+    // add the "modified version" indicator to the header
+    memcpy( (cli_header + strlen(cli_header) - 78) , &BBOS_VERSION_MOD, 1); // manually offset to the correct position
     // print the ASCII header before dropping into the CLI
     shell_print(cli_header);
     // free up the RAM
