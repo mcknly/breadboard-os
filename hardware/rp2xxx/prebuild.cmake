@@ -40,9 +40,14 @@ if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
                                     "pico_lwip_http"
                                     "pico_lwip_mdns"
         )
-        list(APPEND hardware_includes ${hardware_dir}/lwip_config)
+        list(APPEND hardware_includes ${hardware_dir}/net_inc)
     else()
         list(APPEND hardware_libs pico_cyw43_arch_none) # basic CYW43 support
+        set(ENABLE_WIFI false)
+    endif()
+else()
+    if(ENABLE_WIFI)
+        message(WARNING "Board does not support WiFi, disabling this option")
         set(ENABLE_WIFI false)
     endif()
 endif()

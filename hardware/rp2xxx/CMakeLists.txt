@@ -15,8 +15,13 @@ target_sources(${PROJ_NAME} PRIVATE
     hw_clocks.c
     hw_cores.c
     hw_versions.c
-    hw_wifi.c
 )
+
+if (ENABLE_WIFI)
+    target_sources(${PROJ_NAME} PRIVATE
+        hw_wifi.c
+    )
+endif()
 
 function(hardware_build_extra)
     # initialize the Pico/RP2040 SDK

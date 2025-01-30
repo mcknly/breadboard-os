@@ -44,9 +44,9 @@ const service_desc_t service_descriptors[] = {
     {
         .name = xstr(SERVICE_NAME_NETMAN), 
         .service_func = netman_service,
-        .startup = false
+        .startup = true
     },
-#endif
+#endif /* HW_USE_WIFI */
     {
         .name = xstr(SERVICE_NAME_WATCHDOG), 
         .service_func = watchdog_service,

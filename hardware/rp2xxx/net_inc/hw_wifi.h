@@ -108,9 +108,11 @@ typedef enum{
     HW_WIFI_STATUS_FAIL,
     HW_WIFI_STATUS_BADAUTH,
     HW_WIFI_STATUS_NONET,
-
     HW_WIFI_STATUS_UNKNOWN,
 } hw_wifi_status_t ;
+
+// IP address (IPv4)
+typedef uint32_t hw_wifi_ip_addr_t;
 
 
 /**************************************************
@@ -267,6 +269,19 @@ bool hw_wifi_connect(const char *ssid, const char *password, hw_wifi_auth_t auth
 * @return true if the connection was successful, false if connection error detected
 */
 bool hw_wifi_connect_async(const char *ssid, const char *password, hw_wifi_auth_t auth_type);
+
+/**
+* @brief Reset the WiFi network connection.
+*
+* This function will disable and re-enable AP mode (using hw_wifi_disable_ap_mode
+* and hw_wifi_enable_ap_mode) to effectively disconnect/reset the WiFi connection.
+* It is essentially a helper function since there is no direct disconnect function.
+*
+* @param none
+*
+* @return nothing
+*/
+void hw_wifi_reset_connection(void);
 
 /**
 * @brief Get the IP address of the WiFi module.

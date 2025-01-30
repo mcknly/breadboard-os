@@ -128,6 +128,9 @@ static void prvStorageManagerTask(void *pvParameters)
         // Check the storagemanager queue to see if an item is available
         if (xQueueReceive(storman_queue, (void *)&smi_glob, 0) == pdTRUE)
         {
+            // clear any existing semaphore in case a previous one was not taken
+            xSemaphoreTake(smi_glob_sem, 0);
+
             // determine what action to perform in the filesystem.
             // note that there may be further littlefs capabilities which are
             // not implemented here. see "littlefs/lfs.h" for all APIs
@@ -213,6 +216,11 @@ static void prvStorageManagerTask(void *pvParameters)
                     strcpy(smi_glob.sm_item_data, smi_glob.sm_item_info.name);
                     sprintf(smi_glob.sm_item_data + strlen(smi_glob.sm_item_data), ": %lu bytes", smi_glob.sm_item_info.size);
                     xSemaphoreGive(smi_glob_sem); // provide the binary semaphore to indicate data is available
+                    break;
+                case CHKFILE:    // check if a file exists without error
+                    if (lfs_stat(&lfs_flash0, smi_glob.sm_item_name, &smi_glob.sm_item_info) == 0) {
+                        xSemaphoreGive(smi_glob_sem); // provide the binary semaphore to indicate file exists
+                    }
                     break;
                 case FSSTAT:     // get filesystem statistics
                     smi_glob.sm_item_size = lfs_fs_size(&lfs_flash0);

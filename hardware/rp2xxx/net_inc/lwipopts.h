@@ -8,7 +8,7 @@
 
 // NO_SYS true, since we are running the entire lwIP stack in a single thread.
 // This causes some issue with CYW43 init and blocking things like cyw43_arch_enable_sta_mode(),
-// so watchdog timeout needs to be sufficiently long to allow for this.
+// so watchdog timeout needs to be sufficiently long to allow for this, assuming WD is running.
 #define NO_SYS                      1
 
 // allow override in some examples

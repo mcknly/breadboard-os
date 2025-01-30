@@ -15,8 +15,8 @@ target_compile_definitions(
     PICO
 )
 
-# create cli library to use at top level (linked against microshell)
-add_library(cli STATIC
+# create the source file list for the CLI library
+set(cli_sources
     ${CMAKE_CURRENT_LIST_DIR}/shell.c
     ${CMAKE_CURRENT_LIST_DIR}/shell_cmd.c
     ${CMAKE_CURRENT_LIST_DIR}/cli_utils.c
@@ -27,7 +27,16 @@ add_library(cli STATIC
     ${CMAKE_CURRENT_LIST_DIR}/node_mnt.c
     ${CMAKE_CURRENT_LIST_DIR}/node_etc.c
     ${CMAKE_CURRENT_LIST_DIR}/node_lib.c
-    ${CMAKE_CURRENT_LIST_DIR}/node_net.c
+)
+if (ENABLE_WIFI)
+    list(APPEND cli_sources
+        ${CMAKE_CURRENT_LIST_DIR}/node_net.c
+    )
+endif()
+
+# create cli library to use at top level (linked against microshell)
+add_library(cli STATIC
+    ${cli_sources}
 )
 target_link_libraries(cli PUBLIC
     microshell
