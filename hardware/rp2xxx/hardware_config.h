@@ -793,10 +793,14 @@ uint32_t read_chip_register(uint32_t reg_addr);
 #define HW_USE_ONBOARD_FLASH true
 
 // Onboard Flash Settings
-#define FLASH0_FS_SIZE   (256 * 1024)       // size of the 'flash0' filesystem (intended for littlefs to manage)
-#define PATHNAME_MAX_LEN  32                // maximum string length of path+filename on the filesystem
-#define FILE_SIZE_MAX     BUF_OUT_SIZE      // maximum size of a single file in bytes - set to shell output buffer size so entire files can be dumped
-#define FLASH0_BLOCK_SIZE FLASH_SECTOR_SIZE // "block" size in littlefs terms is "sector" size in RP2040 terms
+#define FLASH0_FS_SIZE       (256 * 1024)       // size of the 'flash0' filesystem (intended for littlefs to manage)
+#define PATHNAME_MAX_LEN      32                // maximum string length of path+filename on the filesystem
+#define FILE_SIZE_MAX         BUF_OUT_SIZE      // maximum size of a single file in bytes - set to shell output buffer size so entire files can be dumped
+#define FLASH0_BLOCK_SIZE     FLASH_SECTOR_SIZE // "block" size in littlefs terms is "sector" size in RP2040 terms
+#define FLASH0_PAGE_SIZE      FLASH_PAGE_SIZE   // littlefs page size is equal to flash page size
+#define FLASH0_CACHE_SIZE     FLASH_PAGE_SIZE   // read/write cache sizes are equal to a page
+#define FLASH0_LOOKAHEAD_SIZE 32                // lookahead buffer size for tracking block allocation
+#define FLASH0_BLOCK_CYCLES   500               // max number of erase cycles for a block (for wear leveling)
 
 // Onboard flash usage detail structure
 typedef struct flash_usage_t {

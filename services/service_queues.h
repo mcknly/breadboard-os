@@ -71,7 +71,8 @@ typedef enum {LSDIR,      // list directory contents
               FILESTAT,   // get file statistics
               CHKFILE,    // check if a file exists without error
               FSSTAT,     // get filesystem statistics
-              FORMAT      // format the filesystem
+              FORMAT,     // format the filesystem
+              UNMOUNT     // unmount the filesystem and stop the service
              } storman_action_t;
 // the storagemanager queue item structure
 typedef struct storman_item_t {storman_action_t action;
