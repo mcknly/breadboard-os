@@ -17,15 +17,18 @@ target_sources(${PROJ_NAME} PRIVATE
     hw_versions.c
 )
 
+if (ENABLE_WIFI)
+    target_sources(${PROJ_NAME} PRIVATE
+        hw_wifi.c
+    )
+endif()
+
 function(hardware_build_extra)
     # initialize the Pico/RP2040 SDK
     pico_sdk_init()
 
     # Pass these parameters to the preprocessor if using specific board/chip types
     # since some HW config needs to change
-    if(PICO_BOARD STREQUAL "pico_w")
-        target_compile_definitions(cli PUBLIC -DUSING_PICOW)
-    endif()
     if(PICO_PLATFORM STREQUAL "rp2040") # the Pico SDK import will auto set PICO_PLATFORM based on PICO_BOARD
         target_compile_definitions(${PROJ_NAME} PUBLIC -DUSING_RP2040)
         target_compile_definitions(cli PUBLIC -DUSING_RP2040)
@@ -33,6 +36,10 @@ function(hardware_build_extra)
     if(PICO_PLATFORM STREQUAL "rp2350-arm-s") # the Pico SDK import will auto set PICO_PLATFORM based on PICO_BOARD
         target_compile_definitions(${PROJ_NAME} PUBLIC -DUSING_RP2350)
         target_compile_definitions(cli PUBLIC -DUSING_RP2350)
+    endif()
+    if(ENABLE_WIFI)
+        target_compile_definitions(${PROJ_NAME} PUBLIC -DHW_USE_WIFI)
+        target_compile_definitions(cli PUBLIC -DHW_USE_WIFI)
     endif()
 
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf

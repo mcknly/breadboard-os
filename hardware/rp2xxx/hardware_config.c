@@ -18,6 +18,9 @@
 #include <string.h>
 #include <stdint.h>
 #include "hardware_config.h"
+#ifdef HW_USE_WIFI
+#include "hw_wifi.h"
+#endif
 
 #ifdef USING_RP2040
 #include "hardware/regs/vreg_and_chip_reset.h"
@@ -124,8 +127,11 @@ void hardware_init(void) {
     uart_puts(UART_ID_CLI, "}\r\n");
 
     // initialize the wireless module
-    if (HW_USE_CYW43 && HAS_CYW43) {
-        if(cyw43_arch_init()) {
+    // if wifi is enabled, this is done in the FreeRTOS task instead, since
+    // the init function uses the pico-sdk lwip/FreeRTOS port in this case
+#ifdef HW_USE_WIFI
+    if (HW_USE_WIRELESS && HAS_CYW43 && !HW_USE_WIFI) {
+        if(hw_wifi_init()) {
             uart_puts(UART_ID_CLI, timestamp());
             uart_puts(UART_ID_CLI, "Failed to initialize CYW43 hardware.\r\n");
         } else {
@@ -133,5 +139,6 @@ void hardware_init(void) {
             uart_puts(UART_ID_CLI, "Initialized onboard wireless module\r\n");
         }
     }
+#endif /* HW_USE_WIFI */
 
 }

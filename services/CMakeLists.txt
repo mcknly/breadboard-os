@@ -9,3 +9,9 @@ target_sources(${PROJ_NAME} PRIVATE
     watchdog_service.c
     heartbeat_service.c
 )
+
+if (ENABLE_WIFI)
+    target_sources(${PROJ_NAME} PRIVATE
+        netman_service.c
+    )
+endif()
