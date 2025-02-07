@@ -17,9 +17,11 @@ target_sources(${PROJ_NAME} PRIVATE
     hw_versions.c
 )
 
+# optional features
 if (ENABLE_WIFI)
     target_sources(${PROJ_NAME} PRIVATE
         hw_wifi.c
+        hw_net.c
     )
 endif()
 
@@ -38,8 +40,10 @@ function(hardware_build_extra)
         target_compile_definitions(cli PUBLIC -DUSING_RP2350)
     endif()
     if(ENABLE_WIFI)
-        target_compile_definitions(${PROJ_NAME} PUBLIC -DHW_USE_WIFI)
-        target_compile_definitions(cli PUBLIC -DHW_USE_WIFI)
+        target_compile_definitions(${PROJ_NAME} PUBLIC -DHW_USE_WIFI
+                                                       -DCYW43_HOST_NAME=\"${HOSTNAME}-${BOARD}\")
+        target_compile_definitions(cli PUBLIC -DHW_USE_WIFI
+                                              -DHOST_NAME=\"${HOSTNAME}\")
     endif()
 
     # disable Pico STDIO - interacting with CLI will be done via RTOS task queue only, no printf
