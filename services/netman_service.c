@@ -23,6 +23,7 @@
 #include "task.h"
 #include "queue.h"
 #include "hw_wifi.h"
+#include "hw_net.h"
 
 
 static void prvNetworkManagerTask(void *pvParameters); // network manager task
@@ -142,6 +143,9 @@ static void prvNetworkManagerTask(void *pvParameters) {
                                 cli_print_raw("wifi connected: ");
                                 cli_print_raw(ip4addr_ntoa(hw_wifi_get_addr()));
                                 nmi_glob.ip = hw_wifi_get_addr()->addr;
+                                
+                                // init httpd - make this optional in the future
+                                net_httpd_stack_init();
                             } else {
                                 cli_print_raw("wifi connection timed out");
                             }

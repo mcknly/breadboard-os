@@ -34,13 +34,15 @@ endif()
 if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
     add_compile_definitions(HAS_CYW43)
     if (ENABLE_WIFI)
-        # include CY43 lwIP/FreeRTOS support
+        # include CY43 lwIP support
         list(APPEND hardware_libs   #"pico_cyw43_arch_lwip_sys_freertos"         # for lwip NO_SYS=0
                                     "pico_cyw43_arch_lwip_threadsafe_background" # for lwip NO_SYS=1
                                     "pico_lwip_http"
-                                    "pico_lwip_mdns"
+                                    "lwip_httpd_content"
         )
-        list(APPEND hardware_includes ${hardware_dir}/net_inc)
+        list(APPEND hardware_includes ${hardware_dir}/net_inc
+                                      ${PICO_LWIP_CONTRIB_PATH}/apps/httpd
+        )
     else()
         list(APPEND hardware_libs pico_cyw43_arch_none) # basic CYW43 support
         set(ENABLE_WIFI false)
