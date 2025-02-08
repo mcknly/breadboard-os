@@ -38,11 +38,12 @@ if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
         list(APPEND hardware_libs   #"pico_cyw43_arch_lwip_sys_freertos"         # for lwip NO_SYS=0
                                     "pico_cyw43_arch_lwip_threadsafe_background" # for lwip NO_SYS=1
                                     "pico_lwip_http"
-                                    "lwip_httpd_content"
         )
-        list(APPEND hardware_includes ${hardware_dir}/net_inc
-                                      ${PICO_LWIP_CONTRIB_PATH}/apps/httpd
-        )
+        list(APPEND hardware_includes ${hardware_dir}/net_inc)
+        if (ENABLE_HTTPD)
+            list(APPEND hardware_libs "lwip_httpd_content")
+            list(APPEND hardware_includes ${PICO_LWIP_CONTRIB_PATH}/apps/httpd)
+        endif()
     else()
         list(APPEND hardware_libs pico_cyw43_arch_none) # basic CYW43 support
         set(ENABLE_WIFI false)

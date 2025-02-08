@@ -94,6 +94,7 @@
  * Application-specific settings
 ********************************/
 
+#ifdef ENABLE_HTTPD
 // Enable cgi and ssi
 #define LWIP_HTTPD_CGI 1
 #define LWIP_HTTPD_SSI 1
@@ -104,5 +105,6 @@
 
 // filename for httpd content generated with pico_set_lwip_httpd_content
 #define HTTPD_FSDATA_FILE "pico_fsdata.inc"
+#endif /* ENABLE_HTTPD */
 
 #endif /* LWIPOPTS_H */
