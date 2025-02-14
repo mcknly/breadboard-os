@@ -49,7 +49,7 @@ target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
-    ${PROJECT_SOURCE_DIR}/${hardware_includes}
+    ${hardware_includes}
 )
 
 # add additional source directories that are not libraries/submodules

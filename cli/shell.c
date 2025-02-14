@@ -90,7 +90,7 @@ static const struct ush_descriptor ush_desc = {
     .output_buffer = ush_out_buf,               // working output buffer
     .output_buffer_size = sizeof(ush_out_buf),  // working output buffer size
     .path_max_length = PATH_MAX_SIZE,           // path maximum length (stack)
-    .hostname = xstr(HOST_NAME),                // hostname (in prompt) - defined in hardware_config.h
+    .hostname = HOST_NAME,                // hostname (in prompt) - defined in hardware_config.h
     .prompt_format = &ush_prompt                // custom prompt formatting
 };
 

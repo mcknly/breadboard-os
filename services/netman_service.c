@@ -23,6 +23,7 @@
 #include "task.h"
 #include "queue.h"
 #include "hw_wifi.h"
+#include "hw_net.h"
 
 
 static void prvNetworkManagerTask(void *pvParameters); // network manager task
@@ -69,6 +70,7 @@ static void prvNetworkManagerTask(void *pvParameters) {
         hw_wifi_enable_sta_mode();
         cli_print_timestamped("WiFi hardware ready to connect");
         shell_net_mount(); // create '/net' node in the shell
+        netman_request(NETJOIN); // auto-connect (will fail if '/net/wifi setauth' never used)
     } else {
         cli_print_timestamped("WiFi init failed");
     }
@@ -139,9 +141,19 @@ static void prvNetworkManagerTask(void *pvParameters) {
                             }
                             if (!timed_out) {
                                 nmi_glob.status = HW_WIFI_STATUS_UP;
-                                cli_print_raw("wifi connected: ");
-                                cli_print_raw(ip4addr_ntoa(hw_wifi_get_addr()));
+                                char ip_msg[32];
+                                snprintf(ip_msg, 32, "wifi connected: %s", ip4addr_ntoa(hw_wifi_get_addr()));
+                                cli_print_raw(ip_msg);
                                 nmi_glob.ip = hw_wifi_get_addr()->addr;
+/* enable optional networking features */
+#ifdef ENABLE_HTTPD
+                                net_mdns_init();
+                                net_httpd_stack_init();
+                                char httpd_msg[40+strlen(CYW43_HOST_NAME)];
+                                sprintf(httpd_msg, "web console accessible at http://%s.local", CYW43_HOST_NAME);
+                                cli_print_raw(httpd_msg);
+#endif
+/* end enable optional networking features */
                             } else {
                                 cli_print_raw("wifi connection timed out");
                             }
