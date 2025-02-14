@@ -16,6 +16,10 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+// stringify helper - use xstr() to convert #define to a usable string
+#define str(s) # s
+#define xstr(s) str(s)
+
 // maintain BreadboardOS version so it can be tracked along with custom project
 #define BBOS_NAME          "breadboard-os" // do not change
 #define BBOS_VERSION_MAJOR 0               // changed only for major release update

@@ -23,13 +23,13 @@
 // RP2040 has 264KB RAM total, RP2350 has 520KB RAM total. RTOS heap will be something less than this.
 // Using the wireless stack appears to chew up about 30-40KB.
 #if defined(USING_RP2350) && !defined(HW_USE_WIFI)
-#define RTOS_HEAP_SIZE (480*1024) // RP2350 without wireless stack
+#define RTOS_HEAP_SIZE (489*1024) // RP2350 without wireless stack
 #elif defined(USING_RP2350) && defined(HW_USE_WIFI)
-#define RTOS_HEAP_SIZE (440*1024) // RP2350 with wireless stack
+#define RTOS_HEAP_SIZE (439*1024) // RP2350 with wireless stack
 #elif defined(USING_RP2040) && !defined(HW_USE_WIFI)
-#define RTOS_HEAP_SIZE (230*1024) // RP2040 without wireless stack
+#define RTOS_HEAP_SIZE (235*1024) // RP2040 without wireless stack
 #elif defined(USING_RP2040) && defined(HW_USE_WIFI)
-#define RTOS_HEAP_SIZE (188*1024) // RP2040 with wireless stack
+#define RTOS_HEAP_SIZE (186*1024) // RP2040 with wireless stack
 #endif
 
 // For FreeRTOS SMP (multicore) support only

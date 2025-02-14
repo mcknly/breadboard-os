@@ -33,15 +33,17 @@ endif()
 # Any other board names that use cyw43 would have to be added here too
 if(PICO_BOARD STREQUAL "pico_w" OR PICO_BOARD STREQUAL "pico2_w")
     add_compile_definitions(HAS_CYW43)
-    if (ENABLE_WIFI)
+    if(ENABLE_WIFI)
         # include CY43 lwIP support
         list(APPEND hardware_libs   #"pico_cyw43_arch_lwip_sys_freertos"         # for lwip NO_SYS=0
                                     "pico_cyw43_arch_lwip_threadsafe_background" # for lwip NO_SYS=1
-                                    "pico_lwip_http"
         )
         list(APPEND hardware_includes ${hardware_dir}/net_inc)
-        if (ENABLE_HTTPD)
-            list(APPEND hardware_libs "lwip_httpd_content")
+        if(ENABLE_HTTPD)
+            list(APPEND hardware_libs   "lwip_httpd_content"
+                                        "pico_lwip_mdns"
+                                        "pico_lwip_http"
+            )
             list(APPEND hardware_includes ${PICO_LWIP_CONTRIB_PATH}/apps/httpd)
         endif()
     else()
@@ -53,4 +55,9 @@ else()
         message(WARNING "Board does not support WiFi, disabling this option")
         set(ENABLE_WIFI false)
     endif()
+endif()
+# Make sure no networking features are enabled if WiFi is disabled
+if(NOT ENABLE_WIFI AND ENABLE_HTTPD)
+    message(WARNING "Disabling httpd due to WiFi option being disabled")
+    set(ENABLE_HTTPD false)
 endif()
