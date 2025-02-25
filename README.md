@@ -25,7 +25,7 @@ BreadboardOS is built on top of FreeRTOS, enabling fast integration of new funct
   
 The central component of BBOS is the fantastic [microshell](https://microshell.pl/) project, which provides CLI functionality. Currently, a [fork](https://github.com/mcknly/microshell) of microshell is used, which includes some additional customization. The CLI implementation is organized into POSIX-style folders/files providing a recognizable user-interface for interacting with MCU hardware.  
   
-As of the v0.3 release, BBOS is implemented on a single MCU family - the Raspberry Pi RP2xxx (Pico, Pico W, Pico2, etc). However, the project has been structured such that all hardware-specific code resides in a single directory, with a header file providing HAL functionality. The platform was built with porting in mind.
+As of the v0.4 release, BBOS is implemented on a single MCU family - the Raspberry Pi RP2xxx (Pico, Pico W, Pico2, etc). However, the project has been structured such that all hardware-specific code resides in a single directory, with a header file providing HAL functionality. The platform was built with porting in mind.
 
 ### _Notable Features_
 
@@ -36,6 +36,7 @@ As of the v0.3 release, BBOS is implemented on a single MCU family - the Raspber
 - Interacting with chip I/O and serial buses directly from command line
 - Watchdog service for system failsafe recovery
 - Command history using arrows or ctrl-a/ctrl-z
+- WiFi networking support with HTTP server for project dashboard
 
 ### _Demo_
 
@@ -84,13 +85,13 @@ Ensure that the environment variables `$FREERTOS_KERNEL_PATH` and `$PICO_SDK_PAT
   
 It is suggested to add these commands to the user's `~/.profile`, `~/.bashrc`, etc depending on the system.
 
-**NOTE for RP2350**: As of 10/2024, official FreeRTOS has not yet merged in support for RP2350. Rasberry Pi's [fork](https://github.com/raspberrypi/FreeRTOS-Kernel) must be used. Further, there is a [bug](https://forums.raspberrypi.com/viewtopic.php?p=2253073#p2253073) in the Pico SDK, use the `develop` branch to incorporate the fix. Hopefully these changes will be merged upstream soon.
+**NOTE for RP2350**: Please ensure that you pull the latest mainline versions of `pico-sdk` and `FreeRTOS-Kernel`, as fixes/support has been recently added (as of early `25).
 
 ### Setting up BreadboardOS
 
 - Clone the repository: `git clone https://github.com/mcknly/breadboard-os.git`
 - Enter the project folder: `cd breadboard-os`
-- Pull in submodules: `git submodule update --init`
+- Pull in submodules: `git submodule update --init` (also do this for pico-sdk and FreeRTOS-Kernel!)
 
 Open `project.cmake` and edit the following parameters:
 ```
@@ -108,6 +109,9 @@ set(PLATFORM rp2xxx)
 
 # BOARD - set the board being used (platform-specific prebuild.cmake contains more information about boards)
 set(BOARD pico2)
+
+# HOSTNAME - hostname will be shown at CLI prompt, and used for network connections
+set(HOSTNAME "bbos")
 ```
 
 Using CLI over USB requires no additional hardware; using CLI over UART will require a USB-UART adapter (i.e. FTDI FT232 or SiLabs CP2102). Using CLI/UART enables some additional early boot status prints.
@@ -171,7 +175,7 @@ In lieu of including the full license text in every source file, the following t
 ---
   
 <div align="center">
-<img src=breadboard.png alt="breadboard" width="600" align=center/>
+<img src=assets/breadboard.png alt="breadboard" width="600" align=center/>
 <br>
 it's fresh
 </div>

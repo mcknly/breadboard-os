@@ -29,7 +29,8 @@
 static void prvStorageManagerTask(void *pvParameters);
 TaskHandle_t xStorManTask;
 
-extern void shell_mnt_mount(void); // declared in this file so /mnt can be mounted on-the-fly
+extern void shell_mnt_mount(void);   // declared in this file so /mnt can be mounted on-the-fly
+extern void shell_mnt_unmount(void); // declared in this file so /mnt can be unmounted on-the-fly
 
 struct storman_item_t smi_glob; // write any resulting lfs data into global struct so it can be used by other tasks
 SemaphoreHandle_t smi_glob_sem; // binary semaphore used to provide a data ready signal to other tasks
@@ -70,6 +71,11 @@ static void prvStorageManagerTask(void *pvParameters)
     lfs_t lfs_flash0;
     lfs_file_t flash0_file;
     lfs_dir_t flash0_dir;
+
+    // allocate memory for littlefs buffers
+    void *lfs_read_buffer = pvPortMalloc(FLASH0_PAGE_SIZE);
+    void *lfs_prog_buffer = pvPortMalloc(FLASH0_PAGE_SIZE);
+    void *lfs_lookahead_buffer = pvPortMalloc(FLASH0_LOOKAHEAD_SIZE);
     
     // littlefs flash0 filesystem configuration
     struct lfs_config fs_config_flash0 = {
@@ -81,12 +87,17 @@ static void prvStorageManagerTask(void *pvParameters)
 
         // block device configuration
         .read_size = 1,
-        .prog_size = FLASH_PAGE_SIZE,
-        .block_size = FLASH_SECTOR_SIZE,
-        .block_count = FLASH0_FS_SIZE / FLASH_SECTOR_SIZE,
-        .block_cycles = 500,
-        .cache_size = FLASH_PAGE_SIZE,
-        .lookahead_size = 32,
+        .prog_size = FLASH0_PAGE_SIZE,
+        .block_size = FLASH0_BLOCK_SIZE,
+        .block_count = FLASH0_FS_SIZE / FLASH0_BLOCK_SIZE,
+        .block_cycles = FLASH0_BLOCK_CYCLES,
+        .cache_size = FLASH0_CACHE_SIZE,
+        .lookahead_size = FLASH0_LOOKAHEAD_SIZE,
+
+        // pre-allocated buffers
+        .read_buffer = lfs_read_buffer,
+        .prog_buffer = lfs_prog_buffer,
+        .lookahead_buffer = lfs_lookahead_buffer,
 
         // other configurations
         .name_max = PATHNAME_MAX_LEN, // max length of path+filenames
@@ -128,6 +139,9 @@ static void prvStorageManagerTask(void *pvParameters)
         // Check the storagemanager queue to see if an item is available
         if (xQueueReceive(storman_queue, (void *)&smi_glob, 0) == pdTRUE)
         {
+            // clear any existing semaphore in case a previous one was not taken
+            xSemaphoreTake(smi_glob_sem, 0);
+
             // determine what action to perform in the filesystem.
             // note that there may be further littlefs capabilities which are
             // not implemented here. see "littlefs/lfs.h" for all APIs
@@ -214,6 +228,11 @@ static void prvStorageManagerTask(void *pvParameters)
                     sprintf(smi_glob.sm_item_data + strlen(smi_glob.sm_item_data), ": %lu bytes", smi_glob.sm_item_info.size);
                     xSemaphoreGive(smi_glob_sem); // provide the binary semaphore to indicate data is available
                     break;
+                case CHKFILE:    // check if a file exists without error
+                    if (lfs_stat(&lfs_flash0, smi_glob.sm_item_name, &smi_glob.sm_item_info) == 0) {
+                        xSemaphoreGive(smi_glob_sem); // provide the binary semaphore to indicate file exists
+                    }
+                    break;
                 case FSSTAT:     // get filesystem statistics
                     smi_glob.sm_item_size = lfs_fs_size(&lfs_flash0);
                     if (smi_glob.sm_item_size < 0) {
@@ -236,6 +255,15 @@ static void prvStorageManagerTask(void *pvParameters)
                         strcpy(smi_glob.sm_item_data, "problem formatting");
                     }
                     xSemaphoreGive(smi_glob_sem); // provide the binary semaphore to indicate data is available
+                    break;
+                case UNMOUNT:    // unmount the filesystem and stop the service
+                    err = lfs_unmount(&lfs_flash0);
+                    // free up buffers
+                    vPortFree(lfs_read_buffer);
+                    vPortFree(lfs_prog_buffer);
+                    vPortFree(lfs_lookahead_buffer);
+                    // remove the "/mnt" node from the CLI
+                    shell_mnt_unmount();
                     break;
                 default:
                     break;
@@ -294,6 +322,11 @@ static void prvStorageManagerTask(void *pvParameters)
                 break;
             }
             cli_print_raw(err_msg);
+        }
+
+        if(smi_glob.action == UNMOUNT) {
+            // filesystem is already unmounted, delete this task
+            vTaskDelete(NULL);
         }
 
         // update this task's schedule

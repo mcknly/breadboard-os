@@ -71,16 +71,18 @@ size_t version_get_data_callback(struct ush_object *self, struct ush_file_descri
 {
     // use malloc rather than passing a pointer to a static char array back to uShell,
     // since it is a rather large array
-    char *version_msg = pvPortMalloc(300);
+    char *version_msg = pvPortMalloc(400);
 
     sprintf(version_msg, "" USH_SHELL_FONT_STYLE_BOLD USH_SHELL_FONT_COLOR_BLUE);
     sprintf(version_msg + strlen(version_msg), xstr(PROJECT_NAME) " version:\t" xstr(PROJECT_VERSION) "\r\n"); // Top level project version
     sprintf(version_msg + strlen(version_msg), "" USH_SHELL_FONT_STYLE_RESET);
+    sprintf(version_msg + strlen(version_msg), "Build branch:\t\t%s\r\n",   git_Branch());               // Git commit date of build
     sprintf(version_msg + strlen(version_msg), "Git commit date:\t%s\r\n",  git_CommitDate());           // Git commit date of build
     sprintf(version_msg + strlen(version_msg), "Git commit hash:\t%s\r\n",  git_CommitSHA1());           // Git commit hash of build
-    sprintf(version_msg + strlen(version_msg), "%s version:\t%d.%d\r\n",    BBOS_NAME,                   // BreadboardOS version          
+    sprintf(version_msg + strlen(version_msg), "%s version:\t%d.%d%c\r\n",  BBOS_NAME,                   // BreadboardOS version          
                                                                             BBOS_VERSION_MAJOR,
-                                                                            BBOS_VERSION_MINOR);
+                                                                            BBOS_VERSION_MINOR,
+                                                                            BBOS_VERSION_MOD);
     sprintf(version_msg + strlen(version_msg), "FreeRTOS version:\t%s\r\n", tskKERNEL_VERSION_NUMBER);   // FreeRTOS Kernel version
     sprintf(version_msg + strlen(version_msg), "%s version:\t%s\r\n", USH_NAME, USH_VERSION);            // microshell version
     sprintf(version_msg + strlen(version_msg), "littlefs version:\t%d.%d\r\n",  LFS_VERSION_MAJOR,       // littlefs version
@@ -105,8 +107,8 @@ size_t version_get_data_callback(struct ush_object *self, struct ush_file_descri
 */
 size_t resetreason_get_data_callback(struct ush_object *self, struct ush_file_descriptor const *file, uint8_t **data)
 {
-    // get reset reason string
-    char *reset_reason_string = get_reset_reason_string();
+    // get reset reason string using global reset reason type captured at boot
+    char *reset_reason_string = get_reset_reason_string(last_reset_reason);
     // copy the pointer to the reset reason string
     *data = (uint8_t*)reset_reason_string;
     // return data size

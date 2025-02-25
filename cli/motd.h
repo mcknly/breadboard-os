@@ -83,6 +83,7 @@ USH_SHELL_FONT_COLOR_YELLOW
 "         \\  \\::/     \\  \\::/     \\  \\::/       /__/:/             \r\n"
 "          \\__\\/       \\__\\/       \\__\\/        \\__\\/  "
 xstr(BBOS_VERSION_MAJOR) "." xstr(BBOS_VERSION_MINOR) // add version number to header
+" " // add an extra space that will be replaced by BBOS_VERSION_MOD
 "\r\n"
 "\r\n"
 USH_SHELL_FONT_COLOR_MAGENTA

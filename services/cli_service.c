@@ -15,6 +15,8 @@
 
 #include <microshell.h>
 #include <string.h>
+#include <git.h>
+#include "version.h"
 #include "hardware_config.h"
 #include "rtos_utils.h"
 #include "shell.h"
@@ -25,12 +27,14 @@
 #include "task.h"
 #include "queue.h"
 
-#define PRINT_MOTD_AT_BOOT true
+#ifndef PRINT_MOTD_AT_BOOT
+#define PRINT_MOTD_AT_BOOT false
+#endif
 
 
 static void prvCliTask(void *pvParameters); // microshell cli task
 TaskHandle_t xShellTask;
-//struct ush_object ush; // microshell instance handler - global is in shell.c
+char BBOS_VERSION_MOD; // global "modified version" variable - declared in version.h
 
 // main service function, creates FreeRTOS task from prvCliTask
 BaseType_t cli_service(void)
@@ -68,8 +72,11 @@ static void prvCliTask(void *pvParameters)
     char print_string[PRINT_QUEUE_ITEM_SIZE];
     extern const char *bbos_header_ascii;
 
+    // Set the global "modified version" indicator if on a branch other than main
+    BBOS_VERSION_MOD = strcmp(git_Branch(), "main") ? '+' : ' ';
+
     // delay CLI startup to allow taskmanager to finish with its startup status prints
-    vTaskDelay(DELAY_TASKMAN * 2);
+    vTaskDelay(DELAY_TASKMAN * 5);
 
     // print MOTD for additional YouTube likes
     if (PRINT_MOTD_AT_BOOT) {
@@ -85,8 +92,10 @@ static void prvCliTask(void *pvParameters)
     }
 
     // copy the CLI ASCII header into RAM
-    char *cli_header = pvPortMalloc(strlen(bbos_header_ascii+1));
+    char *cli_header = pvPortMalloc(strlen(bbos_header_ascii+2)); // two extra bytes for BBOS_VERSION_MOD and NULL
     strcpy(cli_header, bbos_header_ascii);
+    // add the "modified version" indicator to the header
+    memcpy( (cli_header + strlen(cli_header) - 78) , &BBOS_VERSION_MOD, 1); // manually offset to the correct position
     // print the ASCII header before dropping into the CLI
     shell_print(cli_header);
     // free up the RAM

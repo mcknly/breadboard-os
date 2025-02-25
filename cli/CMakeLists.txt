@@ -15,8 +15,8 @@ target_compile_definitions(
     PICO
 )
 
-# create cli library to use at top level (linked against microshell)
-add_library(cli STATIC
+# create the source file list for the CLI library
+set(cli_sources
     ${CMAKE_CURRENT_LIST_DIR}/shell.c
     ${CMAKE_CURRENT_LIST_DIR}/shell_cmd.c
     ${CMAKE_CURRENT_LIST_DIR}/cli_utils.c
@@ -28,11 +28,21 @@ add_library(cli STATIC
     ${CMAKE_CURRENT_LIST_DIR}/node_etc.c
     ${CMAKE_CURRENT_LIST_DIR}/node_lib.c
 )
+if (ENABLE_WIFI)
+    list(APPEND cli_sources
+        ${CMAKE_CURRENT_LIST_DIR}/node_net.c
+    )
+endif()
+
+# create cli library to use at top level (linked against microshell)
+add_library(cli STATIC
+    ${cli_sources}
+)
 target_link_libraries(cli PUBLIC
     microshell
-    pico_stdlib
     FreeRTOS-Kernel
     cmake_git_version_tracking
+    ${hardware_libs}
 )
 target_include_directories(cli PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
@@ -42,8 +52,16 @@ target_include_directories(cli PUBLIC
     ${PROJECT_SOURCE_DIR}/services
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
-    ${hardware_dir}
+    ${hardware_includes}
 )
+
+# add any additional definitions, options
+target_compile_definitions(cli PUBLIC 
+    CFG_TUSB_CONFIG_FILE="hardware_config.h" # override standard TinyUSB config file location
+)
+if(ENABLE_MOTD)
+        target_compile_definitions(cli PUBLIC -DPRINT_MOTD_AT_BOOT)
+endif()
 target_compile_options(
     cli
     PRIVATE

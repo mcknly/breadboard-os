@@ -45,7 +45,9 @@
 // custom prompt formatting -
 // microshell prompt format is prompt_prefix+HOST_NAME+prompt_space+[path]+prompt_suffix
 // see "ush_shell.h" for font formatting codes
-#define HOST_NAME pico
+#ifndef HOST_NAME
+#define HOST_NAME "bbos"
+#endif
 #define SHELL_PROMPT_PREFIX USH_SHELL_FONT_COLOR_MAGENTA \
                             USH_SHELL_FONT_STYLE_BOLD \
                             "[" \

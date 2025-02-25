@@ -132,6 +132,11 @@ static void flash0_exec_callback(struct ush_object *self, struct ush_file_descri
                 shell_print(smi_glob.sm_item_data);
             }
         }
+        else if (strcmp(argv[1], "unmount") == 0 && argc == 2) {
+            smi.action = UNMOUNT;
+            storman_request(&smi);
+            shell_print("/mnt folder unmounted, restart storagemanager service to re-mount");
+        }
         else {syntax_err = true;}
     }
     else {syntax_err = true;}
@@ -151,7 +156,8 @@ static const struct ush_file_descriptor mnt_files[] = {
                 "              <writefile|appendfile> <\e[3mname\e[0m> <\e[3mdata\e[0m>,\r\n"
                 "              <filestat> <\e[3mname\e[0m>,\r\n"
                 "              <fsstat>\r\n"
-                "              <format>\r\n",
+                "              <format>\r\n"
+                "              <unmount>\r\n",
         .exec = flash0_exec_callback,
         .get_data = NULL,
         .set_data = NULL
@@ -165,4 +171,10 @@ void shell_mnt_mount(void)
 {
     // mount the /mnt directory
     ush_node_mount(&ush, "/mnt", &mnt, mnt_files, sizeof(mnt_files) / sizeof(mnt_files[0]));
+}
+
+void shell_mnt_unmount(void)
+{
+    // unmount the /mnt directory
+    ush_node_unmount(&ush, "/mnt");
 }

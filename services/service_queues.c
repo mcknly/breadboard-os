@@ -27,6 +27,7 @@ QueueHandle_t taskman_queue;
 QueueHandle_t storman_queue;
 QueueHandle_t usb0_rx_queue;
 QueueHandle_t usb0_tx_queue;
+QueueHandle_t netman_action_queue;
 
 // create task queues
 bool init_queues(void) {
@@ -36,13 +37,17 @@ bool init_queues(void) {
     storman_queue = xQueueCreate(STORMAN_QUEUE_DEPTH, STORMAN_QUEUE_ITEM_SIZE);
     usb0_rx_queue = xQueueCreate(USB0_RX_QUEUE_DEPTH, USB0_RX_QUEUE_ITEM_SIZE);
     usb0_tx_queue = xQueueCreate(USB0_TX_QUEUE_DEPTH, USB0_TX_QUEUE_ITEM_SIZE);
+#ifdef HW_USE_WIFI
+    netman_action_queue = xQueueCreate(NETMAN_ACTION_QUEUE_DEPTH, NETMAN_ACTION_QUEUE_ITEM_SIZE);
+#endif
 
     // make sure they were all created successfully
-    if (print_queue   != NULL &&
-        taskman_queue != NULL &&
-        storman_queue != NULL &&
-        usb0_rx_queue != NULL &&
-        usb0_tx_queue != NULL) {
+    if (print_queue         != NULL &&
+        taskman_queue       != NULL &&
+        storman_queue       != NULL &&
+        usb0_rx_queue       != NULL &&
+        usb0_tx_queue       != NULL &&
+        netman_action_queue != NULL   ) {
         return 0;
     } else {
         return 1;
@@ -87,6 +92,15 @@ bool storman_request(struct storman_item_t *smi) {
     }
     else return false;
 }
+
+#ifdef HW_USE_WIFI
+bool netman_request(netman_action_t nma) {
+    if (xQueueSend(netman_action_queue, &nma, 10) == pdTRUE) { // add request item to networkmanager queue, waiting 10 os ticks max
+        return true;
+    }
+    else return false;
+}
+#endif /* HW_USE_WIFI */
 
 bool usb_data_get(uint8_t *usb_rx_data) {
     if (xQueueReceive(usb0_rx_queue, usb_rx_data, 0) == pdTRUE) { // try to get any data in queue immediately so as not to block

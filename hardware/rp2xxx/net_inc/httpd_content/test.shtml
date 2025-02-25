@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>BBOS</title>
+</head>
+<body>
+    <style>
+        * {
+            background-color: black;
+            font-family: monospace;
+            font-size: 2vw;
+            text-align: left;
+            background-color: black;
+            color: aquamarine;
+            font-weight: bold;
+        }
+        .led-state {
+            color: deeppink;
+        }
+    </style>
+    <h1 style="font-size:4vw; color:deeppink">cgi test</h1>
+    <p>
+        The onboard LED should be [
+        <span class="led-state"><!--#ledstate--></span>
+        ]!
+    </p>
+    <p>
+        This test demonstrates how to use CGI key/value pairs
+        to pass information to the http server, and provide status
+        feedback via SSI tags. Note the URI including led-state query.
+    </p>
+    <p><a href="/">Go back</a></p>
+</body>
+</html>

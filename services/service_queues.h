@@ -25,6 +25,9 @@
 #include "semphr.h"
 #include "queue.h"
 #include "lfs.h"
+#ifdef HW_USE_WIFI
+#include "hw_wifi.h"
+#endif
 
 
 /**********************************************************
@@ -66,11 +69,13 @@ typedef enum {LSDIR,      // list directory contents
               WRITEFILE,  // overwrite a file
               APPENDFILE, // append data to end of file
               FILESTAT,   // get file statistics
+              CHKFILE,    // check if a file exists without error
               FSSTAT,     // get filesystem statistics
-              FORMAT      // format the filesystem
-             } sm_action_t;
+              FORMAT,     // format the filesystem
+              UNMOUNT     // unmount the filesystem and stop the service
+             } storman_action_t;
 // the storagemanager queue item structure
-typedef struct storman_item_t {sm_action_t action;
+typedef struct storman_item_t {storman_action_t action;
                                char sm_item_name[PATHNAME_MAX_LEN];   // file or directory name
                                lfs_soff_t sm_item_offset;             // offset in file to read/write
                                long sm_item_size;                     // size of data to read/write
@@ -85,6 +90,29 @@ extern SemaphoreHandle_t smi_glob_sem;
 
 #define STORMAN_QUEUE_DEPTH     1
 #define STORMAN_QUEUE_ITEM_SIZE sizeof(smi_glob)
+
+
+#ifdef HW_USE_WIFI
+/************************************************************
+ * Network manager queue -
+ * pass commands & data for interacting with network hardware
+*************************************************************/
+extern QueueHandle_t netman_action_queue;
+// networkmanager actions for interacting with network hardware
+typedef enum {NETJOIN, // join a network
+              NETLEAVE // leave a network
+             } netman_action_t;
+// the networkmanager instance info structure
+typedef struct netman_info_t {hw_wifi_status_t status; // network connection status
+                              hw_wifi_ip_addr_t ip;    // current IP address (IPv4)
+                             } netman_info_t;
+
+// global structure to hold networkmanager status info
+extern struct netman_info_t nmi_glob;
+
+#define NETMAN_ACTION_QUEUE_DEPTH      1
+#define NETMAN_ACTION_QUEUE_ITEM_SIZE sizeof(netman_action_t)
+#endif /* HW_USE_WIFI */
 
 
 /**********************************************************
@@ -168,6 +196,21 @@ bool taskman_request(struct taskman_item_t *tmi);
 * @return true if item successfully queued, otherwise false (queue full)
 */
 bool storman_request(struct storman_item_t *smi);
+
+#ifdef HW_USE_WIFI
+/**
+* @brief Send a request to networkmanager.
+*
+* This helper function puts a networkemanager action request item into the
+* networkmanager service's queue for interaction with a the network hardware.
+*
+* @param nma networkmanger request item to put into the queue for network
+             hardware interaction
+*
+* @return true if item successfully queued, otherwise false (queue full)
+*/
+bool netman_request(netman_action_t nma);
+#endif /* HW_USE_WIFI */
 
 /**
 * @brief Get any data bytes in the USB RX buffer queue.

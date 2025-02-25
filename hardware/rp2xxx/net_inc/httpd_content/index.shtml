@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>BBOS</title>
+</head>
+<body>
+    <style>
+        * {
+            background-color: black;
+        }
+        p {
+            white-space: pre;
+            font-family: monospace;
+            font-size: 2vw;
+            text-align: left;
+            background-color: black;
+            color: aquamarine;
+            font-weight: bold;
+        }
+        .bbos-header {
+            color: deeppink;
+        }
+    </style>
+    <p><span class="bbos-header">
+                                           ___          ___
+                  _____       _____       /  /\        /  /\
+                 /  /::\     /  /::\     /  /::\      /  /:/_
+                /  /:/\:\   /  /:/\:\   /  /:/\:\    /  /:/ /\
+               /  /:/~/::\ /  /:/~/::\ /  /:/  \:\  /  /:/ /::\
+              /__/:/ /:/\:/__/:/ /:/\:/__/:/ \__\:\/__/:/ /:/\:\
+              \  \:\/:/~/:|  \:\/:/~/:|  \:\ /  /:/\  \:\/:/~/:/
+               \  \::/ /:/ \  \::/ /:/ \  \:\  /:/  \  \::/ /:/
+                \  \:\/:/   \  \:\/:/   \  \:\/:/    \__\/ /:/
+                 \  \::/     \  \::/     \  \::/       /__/:/
+                  \__\/       \__\/       \__\/        \__\/  <!--#bbosver-->
+       </span>
+                        [[ Welcome to BreadboardOS! ]]
+
+                  <span class="bbos-header"><!--#projinfo--></span>
+                  Platform:   <!--#platform-->
+                  Uptime:     <!--#uptime-->
+                  Free RAM:   <!--#freeram-->
+                  Free flash: <!--#freeflsh-->
+
+                  CGI tests:
+                  <a href="/test.shtml?led-state=on">led-on</a>
+                  <a href="/test.shtml?led-state=off">led-off</a>
+
+                  404 test: <a href="/nonexistent">/nonexistent</a>
+    </p>
+</body>
+</html>

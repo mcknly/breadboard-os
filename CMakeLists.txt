@@ -49,9 +49,10 @@ target_include_directories(${PROJ_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/driver_lib
     ${PROJECT_SOURCE_DIR}/littlefs/littlefs
     ${PROJECT_SOURCE_DIR}/git_version
-    ${PROJECT_SOURCE_DIR}/${hardware_includes}
+    ${hardware_includes}
 )
 
+# add additional source directories that are not libraries/submodules
 add_subdirectory(${PROJECT_SOURCE_DIR}/rtos)
 add_subdirectory(${PROJECT_SOURCE_DIR}/services)
 add_subdirectory(${PROJECT_SOURCE_DIR}/driver_lib)
@@ -63,10 +64,12 @@ endif()
 target_compile_definitions(${PROJ_NAME} PUBLIC 
     CFG_TUSB_CONFIG_FILE="hardware_config.h" # override standard TinyUSB config file location
 )
+
 # hardware-specific build options, function defined in hardware/[platform]/CMakeLists.txt
 if(COMMAND hardware_build_extra)
     cmake_language(CALL hardware_build_extra)
 endif()
+
 # global compiler options for the project
 target_compile_options(
     ${PROJ_NAME}

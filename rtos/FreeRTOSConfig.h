@@ -11,7 +11,10 @@
  *            Released under the MIT License
  * 
  *
- * FreeRTOS V202212.00
+ * See rtos_config.h in the hardware/[platform]/ folder for platform-specific
+ * FreeRTOS configuration settings.
+ * 
+ * FreeRTOS
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -51,6 +54,8 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
+#include "rtos_config.h"
+
 /* Scheduler Related */
 #define configUSE_PREEMPTION                    1
 #define configUSE_TICKLESS_IDLE                 0
@@ -72,7 +77,7 @@
 #define configUSE_QUEUE_SETS                    1
 #define configUSE_TIME_SLICING                  1
 #define configUSE_NEWLIB_REENTRANT              0
-#define configENABLE_BACKWARD_COMPATIBILITY     0
+#define configENABLE_BACKWARD_COMPATIBILITY     1 // needed for lwip FreeRTOS compatibility
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* System */
@@ -82,7 +87,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   (230*1024) // figure out what linker will accept
+#define configTOTAL_HEAP_SIZE                   RTOS_HEAP_SIZE // defined in hardware-specific CMakeLists.txt
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -95,6 +100,10 @@
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 #define configRECORD_STACK_HIGH_ADDRESS         1
+
+/* Co-routine related definitions. */
+#define configUSE_CO_ROUTINES                   0
+#define configMAX_CO_ROUTINE_PRIORITIES         1
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS                        1
@@ -109,25 +118,15 @@
 #define configMAX_API_CALL_INTERRUPT_PRIORITY   [dependent on processor and application]
 */
 
-/* SMP port only */
-#define configNUM_CORES                         2
-#define configTICK_CORE                         1
-#define configRUN_MULTIPLE_PRIORITIES           1
-
-/* RP2040 specific */
-#define configSUPPORT_PICO_SYNC_INTEROP         1
-#define configSUPPORT_PICO_TIME_INTEROP         1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() // if a specific timer init needs to be called before runtime stats it should go here
-extern uint64_t get_time_us(void);               // defined in hw_clocks.c
-#define RUN_TIME_STATS_time_us_64_divider       (1e6 / configTICK_RATE_HZ) // divider for proper runtime stats granularity
-#define portGET_RUN_TIME_COUNTER_VALUE()        (get_time_us() / RUN_TIME_STATS_time_us_64_divider) // function to use for run time stats timer
-
-/* RP2350 specific - ARMv8m/Cortex-m33 options */
-#define configENABLE_TRUSTZONE                  0
-#define configRUN_FREERTOS_SECURE_ONLY          1
-#define configENABLE_FPU                        1
-#define configENABLE_MPU                        0
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    16
+/* SMP port only - this is in mainline FreeRTOS 11 and up */
+/* these are defined in hardware/[platform]/rtos_config.h */
+#define configNUMBER_OF_CORES                   RTOS_NUM_CORES
+#define configTICK_CORE                         RTOS_TICK_CORE
+#define configRUN_MULTIPLE_PRIORITIES           RTOS_RUN_MULTIPLE_PRIORITIES
+#if configNUMBER_OF_CORES > 1
+#define configUSE_CORE_AFFINITY                 RTOS_USE_CORE_AFFINITY
+#endif
+#define configUSE_PASSIVE_IDLE_HOOK             RTOS_USE_PASSIVE_IDLE_HOOK
 
 #include <assert.h>
 /* Define to trap errors during development. */
