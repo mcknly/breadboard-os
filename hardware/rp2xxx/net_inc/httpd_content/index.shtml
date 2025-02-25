@@ -21,8 +21,6 @@
         }
     </style>
     <p><span class="bbos-header">
-
-
                                            ___          ___
                   _____       _____       /  /\        /  /\
                  /  /::\     /  /::\     /  /::\      /  /:/_
@@ -44,8 +42,10 @@
                   Free flash: <!--#freeflsh-->
 
                   CGI tests:
-                  <a href="/test.shtml?led-state=off">led-off</a>
                   <a href="/test.shtml?led-state=on">led-on</a>
+                  <a href="/test.shtml?led-state=off">led-off</a>
+
+                  404 test: <a href="/nonexistent">/nonexistent</a>
     </p>
 </body>
 </html>
