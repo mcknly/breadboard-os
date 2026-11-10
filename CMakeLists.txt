@@ -18,8 +18,25 @@ add_definitions(-DCLI_USE_USB=${CLI_IFACE})    # 0: use UART for CLI (default), 
 add_definitions(-DBOARD=${BOARD})              # pass the board type to the preprocessor for further decision making
 #add_definitions(-DSCHED_TEST_DELAY)           # uncomment to force delay tasks for scheduler testing, see 'task_sched_update()' function
 
+if (DEFINED ENV{FREERTOS_KERNEL_PATH})
+    set(FREERTOS_KERNEL_PATH $ENV{FREERTOS_KERNEL_PATH})
+    message("using ${FREERTOS_KERNEL_PATH} path")
+else()
+    include(FetchContent)
+    set(FETCHCONTENT_QUIET FALSE)
+    FetchContent_Declare(
+        freertos_kernel
+        GIT_REPOSITORY https://github.com/FreeRTOS/FreeRTOS-Kernel
+        GIT_TAG main
+        GIT_SHALLOW TRUE
+        SOURCE_SUBDIR .nonexistent
+    )
+    message("fetching FreeRTOS-Kernel")
+    FetchContent_MakeAvailable(freertos_kernel)
+    set(FREERTOS_KERNEL_PATH ${freertos_kernel_SOURCE_DIR})
+endif()
 # FreeRTOS kernel import (platform-specific)
-include($ENV{FREERTOS_KERNEL_PATH}/${freertos_port_path})
+include(${FREERTOS_KERNEL_PATH}/${freertos_port_path})
 
 # add cli/microshell library subdirectory (submodule)
 add_subdirectory(${PROJECT_SOURCE_DIR}/cli cli)
